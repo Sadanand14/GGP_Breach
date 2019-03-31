@@ -5,8 +5,9 @@
 class Material
 {
 public:
-	Material(SimpleVertexShader* vShader,SimplePixelShader* pShader, ID3D11ShaderResourceView* resource, ID3D11SamplerState* state);
-	Material(SimpleVertexShader* vShader, SimplePixelShader* pShader, ID3D11ShaderResourceView* resource, ID3D11ShaderResourceView* normal, ID3D11SamplerState* state);
+	Material();
+	void CreateMaterial(SimpleVertexShader* vShader, SimplePixelShader* pShader, ID3D11ShaderResourceView* resource, ID3D11SamplerState* state);
+	void CreateNormalMaterial(SimpleVertexShader* vShader, SimplePixelShader* pShader, ID3D11ShaderResourceView* resource, ID3D11ShaderResourceView* normal, ID3D11SamplerState* state);
 	~Material();
 
 	SimpleVertexShader* GetVertexShader();

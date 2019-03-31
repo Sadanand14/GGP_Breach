@@ -1,6 +1,10 @@
 #include "Material.h"
 
-Material::Material(SimpleVertexShader * vShader, SimplePixelShader * pShader, ID3D11ShaderResourceView* resource, ID3D11SamplerState* state)
+Material::Material()
+{
+}
+
+void Material::CreateMaterial(SimpleVertexShader * vShader, SimplePixelShader * pShader, ID3D11ShaderResourceView * resource, ID3D11SamplerState * state)
 {
 	vertexShader = vShader;
 	pixelShader = pShader;
@@ -8,7 +12,7 @@ Material::Material(SimpleVertexShader * vShader, SimplePixelShader * pShader, ID
 	samplerState = state;
 }
 
-Material::Material(SimpleVertexShader * vShader, SimplePixelShader * pShader, ID3D11ShaderResourceView * resource, ID3D11ShaderResourceView * normal, ID3D11SamplerState * state)
+void Material::CreateNormalMaterial(SimpleVertexShader * vShader, SimplePixelShader * pShader, ID3D11ShaderResourceView * resource, ID3D11ShaderResourceView * normal, ID3D11SamplerState * state)
 {
 	vertexShader = vShader;
 	pixelShader = pShader;
