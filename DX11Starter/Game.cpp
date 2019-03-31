@@ -29,28 +29,31 @@ Game::~Game()
 	// will clean up their own internal DirectX stuff
 	delete vertexShader;
 	delete pixelShader;
+	delete skyVS;
+	delete skyPS;
 
 	// Deleting entities
 	for (int i = 0; i < entities.size(); i++) {
 		delete entities[i];
 	}
 
-	// Deleting cam & material
+	// Deleting textures
+	for (int i = 0; i < textures.size(); i++) {
+		delete textures[i];
+	}
+
+	// Deleting textures
+	for (int i = 0; i < normalMaps.size(); i++) {
+		delete normalMaps[i];
+	}
+
+	// Deleting textures
+	for (int i = 0; i < materials.size(); i++) {
+		delete materials[i];
+	}
+
+	// Deleting cam
 	delete cam;
-	delete oblivionMaterial;
-	delete keybladeMaterial;
-	delete staffMaterial;
-	delete shieldMaterial;
-
-	delete oblivionText;
-	delete keybladeText;
-	delete staffText;
-	delete shieldText;
-
-	delete oblivionNorm;
-	delete keybladeNorm;
-	delete staffNorm;
-	delete shieldNorm;
 
 	blendState->Release();
 	rasterState->Release();
@@ -64,6 +67,7 @@ Game::~Game()
 void Game::Init()
 {
 	LoadShaders();
+	InitVectors();
 	GenerateMaterials();
 	InitStates();
 	CreateBasicGeometry();
@@ -85,6 +89,65 @@ void Game::LoadShaders()
 
 	pixelShader = new SimplePixelShader(device, context);
 	pixelShader->LoadShaderFile(L"PixelShader.cso");
+
+	skyVS = new SimpleVertexShader(device, context);
+	skyVS->LoadShaderFile(L"SkyVS.cso");
+
+	skyPS = new SimplePixelShader(device, context);
+	skyPS->LoadShaderFile(L"SkyPS.cso");
+}
+
+void Game::InitVectors()
+{
+	/// Textures
+	skyBoxTexture = new Texture();
+	testText1 = new Texture();
+	testText2 = new Texture();
+	testText3 = new Texture();
+	testText4 = new Texture();
+
+	textures.push_back(skyBoxTexture);
+	textures.push_back(testText1);
+	textures.push_back(testText2);
+	textures.push_back(testText3);
+	textures.push_back(testText4);
+	///
+
+	/// Normal Maps
+	testNorm1 = new Texture();
+	testNorm2 = new Texture();
+	testNorm3 = new Texture();
+	testNorm4 = new Texture();
+
+	normalMaps.push_back(testNorm1);
+	normalMaps.push_back(testNorm2);
+	normalMaps.push_back(testNorm3);
+	normalMaps.push_back(testNorm4);
+	///
+
+	/// Materials
+	skyBoxMaterial = new Material();
+	testMat1 = new Material();
+	testMat2 = new Material();
+	testMat3 = new Material();
+	testMat4 = new Material();
+
+	materials.push_back(skyBoxMaterial);
+	materials.push_back(testMat1);
+	materials.push_back(testMat2);
+	materials.push_back(testMat3);
+	materials.push_back(testMat4);
+	///
+
+	textureResources.push_back(srTest1);
+	textureResources.push_back(srTest2);
+	textureResources.push_back(srTest3);
+	textureResources.push_back(srTest4);
+
+	normalResources.push_back(srTestNormal1);
+	normalResources.push_back(srTestNormal2);
+	normalResources.push_back(srTestNormal3);
+	normalResources.push_back(srTestNormal4);
 }
 
 void Game::CreateBasicGeometry()
@@ -93,15 +156,18 @@ void Game::CreateBasicGeometry()
 	cam->UpdateProjectionMatrix((float)width / height);
 
 	// Making entities with materials and putting them in the vector
-	obj1 = new Entity("Assets/Models/sphere.obj", device, oblivionMaterial);
-	obj2 = new Entity("Assets/Models/sphere.obj", device, keybladeMaterial);
-	obj3 = new Entity("Assets/Models/sphere.obj", device, staffMaterial);
-	obj4 = new Entity("Assets/Models/sphere.obj", device, shieldMaterial);
+	skyBox = new Entity("Assets/Models/cube.obj", device, skyBoxMaterial);
+	obj1 = new Entity("Assets/Models/sphere.obj", device, testMat1);
+	obj2 = new Entity("Assets/Models/sphere.obj", device, testMat2);
+	obj3 = new Entity("Assets/Models/sphere.obj", device, testMat3);
+	obj4 = new Entity("Assets/Models/sphere.obj", device, testMat4);
 
+	entities.push_back(skyBox);
 	entities.push_back(obj1);
 	entities.push_back(obj2);
 	entities.push_back(obj3);
 	entities.push_back(obj4);
+	///
 }
 
 void Game::GenerateLights()
@@ -147,25 +213,29 @@ void Game::GenerateLights()
 
 void Game::GenerateMaterials()
 {
+	// Skybox Texture
+	skyBoxTexture->CreateCubeMap(device, context, L"Assets/Textures/testTextures/Colored.jpg", &skyResourceView);
+	skyBoxMaterial->CreateMaterial(skyVS, skyPS, skyBoxTexture->GetShaderResourceView(), skyBoxTexture->GetSamplerState());
+
 	/// Textures
-	oblivionText = new Texture(device, context, L"Assets/Textures/testTextures/Colored.jpg", &srOblivion);
-	keybladeText = new Texture(device, context, L"Assets/Textures/testTextures/Rock.jpg", &srKeyblade);
-	staffText = new Texture(device, context, L"Assets/Textures/testTextures/Marble.jpg", &srStaff);
-	shieldText = new Texture(device, context, L"Assets/Textures/testTextures/Wood.jpg", &srShield);
+	testText1->CreateTexure(device, context, L"Assets/Textures/testTextures/Colored.jpg", &srTest1);
+	testText2->CreateTexure(device, context, L"Assets/Textures/testTextures/Rock.jpg", &srTest2);
+	testText3->CreateTexure(device, context, L"Assets/Textures/testTextures/Marble.jpg", &srTest3);
+	testText4->CreateTexure(device, context, L"Assets/Textures/testTextures/Wood.jpg", &srTest4);
 	///
 
 	/// Normals
-	oblivionNorm = new Texture(device, context, L"Assets/Textures/testTextures/Colored_Normal.jpg", &srOblivionNormal);
-	keybladeNorm = new Texture(device, context, L"Assets/Textures/testTextures/Rock_Normal.jpg", &srKeybladeNormal);
-	staffNorm = new Texture(device, context, L"Assets/Textures/testTextures/Marble_Normal.jpg", &srStaffNormal);
-	shieldNorm = new Texture(device, context, L"Assets/Textures/testTextures/Wood_Normal.jpg", &srShieldNormal);
+	testNorm1->CreateTexure(device, context, L"Assets/Textures/testTextures/Colored_Normal.jpg", &srTestNormal1);
+	testNorm2->CreateTexure(device, context, L"Assets/Textures/testTextures/Rock_Normal.jpg", &srTestNormal2);
+	testNorm3->CreateTexure(device, context, L"Assets/Textures/testTextures/Marble_Normal.jpg", &srTestNormal3);
+	testNorm4->CreateTexure(device, context, L"Assets/Textures/testTextures/Wood_Normal.jpg", &srTestNormal4);
 	///
 
 	// passing pixel and vertex to materials
-	oblivionMaterial = new Material(vertexShader, pixelShader, oblivionText->GetShaderResourceView(), oblivionNorm->GetShaderResourceView(), oblivionText->GetSamplerState());
-	keybladeMaterial = new Material(vertexShader, pixelShader, keybladeText->GetShaderResourceView(), keybladeNorm->GetShaderResourceView(), keybladeText->GetSamplerState());
-	staffMaterial = new Material(vertexShader, pixelShader, staffText->GetShaderResourceView(), staffNorm->GetShaderResourceView(), staffText->GetSamplerState());
-	shieldMaterial = new Material(vertexShader, pixelShader, shieldText->GetShaderResourceView(), shieldNorm->GetShaderResourceView(), shieldText->GetSamplerState());
+	testMat1->CreateNormalMaterial(vertexShader, pixelShader, testText1->GetShaderResourceView(), testNorm1->GetShaderResourceView(), testText1->GetSamplerState());
+	testMat2->CreateNormalMaterial(vertexShader, pixelShader, testText2->GetShaderResourceView(), testNorm2->GetShaderResourceView(), testText2->GetSamplerState());
+	testMat3->CreateNormalMaterial(vertexShader, pixelShader, testText3->GetShaderResourceView(), testNorm3->GetShaderResourceView(), testText3->GetSamplerState());
+	testMat4->CreateNormalMaterial(vertexShader, pixelShader, testText4->GetShaderResourceView(), testNorm4->GetShaderResourceView(), testText4->GetSamplerState());
 }
 
 void Game::InitStates()
@@ -211,8 +281,23 @@ void Game::InitStates()
 
 	// Set the state! (For last param, set all the bits!)
 	context->OMSetBlendState(blendState, 0, 0xFFFFFFFF);
+
+	// Create the states for the sky
+	D3D11_RASTERIZER_DESC skyRD = {};
+	skyRD.CullMode = D3D11_CULL_FRONT;
+	skyRD.FillMode = D3D11_FILL_SOLID;
+	skyRD.DepthClipEnable = true;
+	device->CreateRasterizerState(&skyRD, &skyRasterState);
+
+	D3D11_DEPTH_STENCIL_DESC skyDD = {};
+	skyDD.DepthEnable = true;
+	skyDD.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	skyDD.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+	device->CreateDepthStencilState(&skyDD, &skyDepthState);
 	///
 }
+
+
 
 void Game::OnResize()
 {
@@ -237,36 +322,44 @@ void Game::Update(float deltaTime, float totalTime)
 
 	float sinTime = (sin(totalTime * 10) + 2.0f) / 5.0f;
 
-	/// Moving Entity 1
-	entities[0]->SetPosition(0, 0, 5);
-	entities[0]->SetScale(3,3,3);
-	entities[0]->SetRotation(0,0,0);
+	// SkyBox
+	entities[0]->SetPosition(0, 0, 0);
+	entities[0]->SetScale(1, 1, 1);
+	entities[0]->SetRotation(0, 0, 0);
 	///
 
 	entities[0]->SetWorldMatrix(entities[0]->CalculateWorldMatrix(entities[0]));
 
-	/// Moving Entity 2
-	entities[1]->SetPosition(-4 , 0, 5);
-	entities[1]->SetScale(3, 3, 3);
-	entities[1]->SetRotation(0, 0, 0);
+	/// Moving Entity 1
+	entities[1]->SetPosition(0, 0, 5);
+	entities[1]->SetScale(3,3,3);
+	entities[1]->SetRotation(0,0,0);
 	///
 
 	entities[1]->SetWorldMatrix(entities[1]->CalculateWorldMatrix(entities[1]));
 
-	/// Moving Entity 3
-	entities[2]->SetPosition(-8, 0, 5);
+	/// Moving Entity 2
+	entities[2]->SetPosition(-4 , 0, 5);
 	entities[2]->SetScale(3, 3, 3);
 	entities[2]->SetRotation(0, 0, 0);
-
-	entities[2]->SetWorldMatrix(entities[2]->CalculateWorldMatrix(entities[2]));
 	///
 
-	/// Moving Entity 4
-	entities[3]->SetPosition(4, 0, 5);
+	entities[2]->SetWorldMatrix(entities[2]->CalculateWorldMatrix(entities[2]));
+
+	/// Moving Entity 3
+	entities[3]->SetPosition(-8, 0, 5);
 	entities[3]->SetScale(3, 3, 3);
 	entities[3]->SetRotation(0, 0, 0);
 
 	entities[3]->SetWorldMatrix(entities[3]->CalculateWorldMatrix(entities[3]));
+	///
+
+	/// Moving Entity 4
+	entities[4]->SetPosition(4, 0, 5);
+	entities[4]->SetScale(3, 3, 3);
+	entities[4]->SetRotation(0, 0, 0);
+
+	entities[4]->SetWorldMatrix(entities[4]->CalculateWorldMatrix(entities[4]));
 	///
 }
 
@@ -296,6 +389,8 @@ void Game::Draw(float deltaTime, float totalTime)
 	//  - Once you start applying different shaders to different objects,
 	//    you'll need to swap the current shaders before each draw
 	vertexShader->SetShader();
+
+	pixelShader->SetShaderResourceView("Sky", skyResourceView);
 	pixelShader->SetShader();
 
 	// Set buffers in the input assembler
@@ -304,7 +399,7 @@ void Game::Draw(float deltaTime, float totalTime)
 	UINT stride = sizeof(Vertex);
 	UINT offset = 0;
 
-	for (int i = 0; i < entities.size(); i++) {
+	for (int i = 1; i < entities.size(); i++) {
 		entities[i]->PrepareShader(cam->GetViewMatrix(), cam->GetProjectionMatrix());
 
 		vertexShader->SetMatrix4x4("world", entities[i]->GetWorldMatrix());
@@ -320,10 +415,47 @@ void Game::Draw(float deltaTime, float totalTime)
 			0);
 	}
 
+	// Draw the sky AFTER all opaque geometry
+	DrawSky();
+
 	// Present the back buffer to the user
 	//  - Puts the final frame we're drawing into the window so the user can see it
 	//  - Do this exactly ONCE PER FRAME (always at the very end of the frame)
 	swapChain->Present(0, 0);
+}
+
+void Game::DrawSky()
+{
+	ID3D11Buffer* skyVB = entities[0]->meshObject->GetVertexBuffer();
+	ID3D11Buffer* skyIB = entities[0]->meshObject->GetIndexBuffer();
+
+	// Set buffers in the input assembler
+	UINT stride = sizeof(Vertex);
+	UINT offset = 0;
+	context->IASetVertexBuffers(0, 1, &skyVB, &stride, &offset);
+	context->IASetIndexBuffer(skyIB, DXGI_FORMAT_R32_UINT, 0);
+
+	// Set up shaders
+	skyVS->SetMatrix4x4("view", cam->GetViewMatrix());
+	skyVS->SetMatrix4x4("projection", cam->GetProjectionMatrix());
+	skyVS->CopyAllBufferData();
+	skyVS->SetShader();
+
+	skyPS->SetShaderResourceView("Sky", skyBoxMaterial->GetShaderResourceView());
+	skyPS->SetSamplerState("BasicSampler", skyBoxMaterial->GetSamplerState());
+	skyPS->SetShader();
+
+
+	// Set up sky-specific render states
+	context->RSSetState(skyRasterState);
+	context->OMSetDepthStencilState(skyDepthState, 0);
+
+	// Draw
+	context->DrawIndexed(entities[0]->meshObject->GetIndexCount(), 0, 0);
+
+	// Reset your states
+	context->RSSetState(0);
+	context->OMSetDepthStencilState(0, 0);
 }
 
 

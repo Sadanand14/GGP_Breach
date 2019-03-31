@@ -5,6 +5,7 @@
 // - Each variable must have a semantic, which defines its usage
 Texture2D res : register(t0);
 Texture2D normalMap : register(t1);
+TextureCube Sky	: register(t2);
 SamplerState state  : register(s0);
 
 struct VertexToPixel
@@ -141,6 +142,9 @@ float4 PointLightPhong(VertexToPixel input, PointLight lightType) {
 
 	if (textureColor.a < 0.2f)
 		discard;
+
+	float3 skyRefl = reflect(-dirToEye, input.normal);
+	//Sky.Sample(BasicSampler, skyRefl);
 
 	return float4((lightType.AmbientColor * textureColor.rgb) + (lightType.DiffuseColor * NdotL* textureColor.rgb) + specular, textureColor.a) * atten;
 }

@@ -1,17 +1,2 @@
-﻿C:\Users\Supa Nigga 5000\Documents\GitHub\GGP_Breach\DX11Starter\PixelShader.hlsl(145,17-57): warning X3206: implicit truncation of vector type
-C:\Users\Supa Nigga 5000\Documents\GitHub\GGP_Breach\DX11Starter\PixelShader.hlsl(145,63-110): warning X3206: implicit truncation of vector type
-  
-  compilation object save succeeded; see C:\Users\Supa Nigga 5000\Documents\GitHub\GGP_Breach\x64\Debug\PixelShader.cso
-  compilation object save succeeded; see C:\Users\Supa Nigga 5000\Documents\GitHub\GGP_Breach\x64\Debug\VertexShader.cso
-  Camera.cpp
-  DXCore.cpp
-  Emitter.cpp
-  Entity.cpp
-  Game.cpp
-  Main.cpp
-  Material.cpp
-  Mesh.cpp
-  SimpleShader.cpp
-  Texture.cpp
-  Generating Code...
-  DX11Starter.vcxproj -> C:\Users\Supa Nigga 5000\Documents\GitHub\GGP_Breach\x64\Debug\DX11Starter.exe
+﻿  Game.cpp
+  DX11Starter.vcxproj -> Z:\IGMProfile\Documents\GitHub\GGP_Breach\x64\Debug\DX11Starter.exe
