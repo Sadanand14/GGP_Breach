@@ -9,7 +9,7 @@ Texture::Texture()
 Texture::~Texture()
 {
 	// deleting shader resource
-	//shaderResource->Release();
+	shaderResource->Release();
 	samplerState->Release();
 }
 
@@ -39,7 +39,7 @@ void Texture::CreateTexure(ID3D11Device * dev, ID3D11DeviceContext * devContext,
 	dev->CreateSamplerState(&samplerDesc, &samplerState);
 }
 
-void Texture::CreateCubeMap(ID3D11Device * dev, ID3D11DeviceContext * devContext, const wchar_t * fileName, ID3D11ShaderResourceView ** _cubemap, ID3D11RasterizerState* _rasterState, ID3D11DepthStencilState* _depthState)
+void Texture::CreateCubeMap(ID3D11Device * dev, ID3D11DeviceContext * devContext, const wchar_t * fileName, ID3D11ShaderResourceView ** _cubemap)
 {
 	// Load the sky box
 	CreateDDSTextureFromFile(dev, fileName, 0, _cubemap);
@@ -57,16 +57,5 @@ void Texture::CreateCubeMap(ID3D11Device * dev, ID3D11DeviceContext * devContext
 	// Ask DirectX for the actual object
 	dev->CreateSamplerState(&samplerDesc, &samplerState);
 
-	// Create the states for the sky
-	D3D11_RASTERIZER_DESC rd = {};
-	rd.CullMode = D3D11_CULL_FRONT;
-	rd.FillMode = D3D11_FILL_SOLID;
-	rd.DepthClipEnable = true;
-	dev->CreateRasterizerState(&rd, &_rasterState);
-
-	D3D11_DEPTH_STENCIL_DESC dd = {};
-	dd.DepthEnable = true;
-	dd.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-	dd.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
-	dev->CreateDepthStencilState(&dd, &_depthState);
+	
 }

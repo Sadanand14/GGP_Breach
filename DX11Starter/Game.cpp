@@ -156,7 +156,7 @@ void Game::CreateBasicGeometry()
 	cam->UpdateProjectionMatrix((float)width / height);
 
 	// Making entities with materials and putting them in the vector
-	skyBox = new Entity("Assets/Models/cube.obj", device, testMat1);
+	skyBox = new Entity("Assets/Models/cube.obj", device, skyBoxMaterial);
 	obj1 = new Entity("Assets/Models/sphere.obj", device, testMat1);
 	obj2 = new Entity("Assets/Models/sphere.obj", device, testMat2);
 	obj3 = new Entity("Assets/Models/sphere.obj", device, testMat3);
@@ -214,7 +214,7 @@ void Game::GenerateLights()
 void Game::GenerateMaterials()
 {
 	// Skybox Texture
-	skyBoxTexture->CreateCubeMap(device, context, L"Assets/Textures/SunnyCubeMap.dds", &skyResourceView, skyRasterState, skyDepthState);
+	skyBoxTexture->CreateCubeMap(device, context, L"Assets/Textures/testTextures/Colored.jpg", &skyResourceView);
 	skyBoxMaterial->CreateMaterial(skyVS, skyPS, skyBoxTexture->GetShaderResourceView(), skyBoxTexture->GetSamplerState());
 
 	/// Textures
@@ -281,6 +281,19 @@ void Game::InitStates()
 
 	// Set the state! (For last param, set all the bits!)
 	context->OMSetBlendState(blendState, 0, 0xFFFFFFFF);
+
+	// Create the states for the sky
+	D3D11_RASTERIZER_DESC skyRD = {};
+	skyRD.CullMode = D3D11_CULL_FRONT;
+	skyRD.FillMode = D3D11_FILL_SOLID;
+	skyRD.DepthClipEnable = true;
+	device->CreateRasterizerState(&skyRD, &skyRasterState);
+
+	D3D11_DEPTH_STENCIL_DESC skyDD = {};
+	skyDD.DepthEnable = true;
+	skyDD.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	skyDD.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+	device->CreateDepthStencilState(&skyDD, &skyDepthState);
 	///
 }
 

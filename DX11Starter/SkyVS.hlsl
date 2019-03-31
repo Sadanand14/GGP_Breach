@@ -17,7 +17,7 @@ struct VertexShaderInput
 // Out of the vertex shader (and eventually input to the PS)
 struct VertexToPixel
 {
-	float4 position		: SV_POSITION;
+	float4 position		 : SV_POSITION;
 	float3 cubeDirection : DIRECTION;
 };
 

@@ -12,7 +12,7 @@ public:
 	ID3D11ShaderResourceView * GetShaderResourceView();
 	ID3D11SamplerState* GetSamplerState();
 	void CreateTexure(ID3D11Device* dev, ID3D11DeviceContext* devContext, const wchar_t* fileName, ID3D11ShaderResourceView** _texture);
-	void CreateCubeMap(ID3D11Device* dev, ID3D11DeviceContext* devContext, const wchar_t* fileName, ID3D11ShaderResourceView** _cubemap, ID3D11RasterizerState* _rasterState, ID3D11DepthStencilState* _depthState);
+	void CreateCubeMap(ID3D11Device* dev, ID3D11DeviceContext* devContext, const wchar_t* fileName, ID3D11ShaderResourceView** _cubemap);
 
 private:
 	//// Loading in textures
