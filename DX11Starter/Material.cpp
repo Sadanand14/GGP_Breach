@@ -10,7 +10,7 @@ void Material::CreateMaterial(SimpleVertexShader * vShader, SimplePixelShader * 
 	pixelShader = pShader;
 	shaderRes = resource;
 	samplerState = state;
-}
+	}
 
 void Material::CreateNormalMaterial(SimpleVertexShader * vShader, SimplePixelShader * pShader, ID3D11ShaderResourceView * resource, ID3D11ShaderResourceView * normal, ID3D11SamplerState * state)
 {
