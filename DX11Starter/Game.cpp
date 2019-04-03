@@ -1,5 +1,7 @@
 #include "Game.h"
 
+#include "Scene.h"
+
 // For the DirectX Math library
 using namespace DirectX;
 
@@ -34,7 +36,7 @@ Game::~Game()
 
 	// Deleting entities
 	for (int i = 0; i < entities.size(); i++) {
-		delete entities[i];
+		delete entities[i]->meshObject;
 	}
 
 	// Deleting textures
@@ -51,6 +53,8 @@ Game::~Game()
 	for (int i = 0; i < materials.size(); i++) {
 		delete materials[i];
 	}
+
+	delete scene;
 
 	// Deleting cam
 	delete cam;
@@ -158,11 +162,19 @@ void Game::CreateBasicGeometry()
 	cam->UpdateProjectionMatrix((float)width / height);
 
 	// Making entities with materials and putting them in the vector
-	skyBox = new Entity("Assets/Models/cube.obj", device, skyBoxMaterial);
-	obj1 = new Entity("Assets/Models/sphere.obj", device, testMat1);
-	obj2 = new Entity("Assets/Models/sphere.obj", device, testMat2);
-	obj3 = new Entity("Assets/Models/sphere.obj", device, testMat3);
-	obj4 = new Entity("Assets/Models/sphere.obj", device, testMat4);
+	// skyBox = new Entity("Assets/Models/cube.obj", device, skyBoxMaterial);
+	// obj1 = new Entity("Assets/Models/sphere.obj", device, testMat1);
+	// obj2 = new Entity("Assets/Models/sphere.obj", device, testMat2);
+	// obj3 = new Entity("Assets/Models/sphere.obj", device, testMat3);
+	// obj4 = new Entity("Assets/Models/sphere.obj", device, testMat4);
+
+	scene = new Scene();
+
+	skyBox = scene->SpawnEntity("Assets/Models/cube.obj", device, skyBoxMaterial);
+	obj1 = scene->SpawnEntity("Assets/Models/sphere.obj", device, testMat1);
+	obj2 = scene->SpawnEntity("Assets/Models/sphere.obj", device, testMat2);
+	obj3 = scene->SpawnEntity("Assets/Models/sphere.obj", device, testMat3);
+	obj4 = scene->SpawnEntity("Assets/Models/cube.obj", device, testMat4);
 
 	entities.push_back(skyBox);
 	entities.push_back(obj1);
@@ -311,43 +323,43 @@ void Game::Update(float deltaTime, float totalTime)
 	float sinTime = (sin(totalTime * 10) + 2.0f) / 5.0f;
 
 	// SkyBox
-	entities[0]->SetPosition(0, 0, 0);
-	entities[0]->SetScale(1, 1, 1);
-	entities[0]->SetRotation(0, 0, 0);
+	entities[0]->SetPositionF(0, 0, 0);
+	entities[0]->SetScaleF(1, 1, 1);
+	entities[0]->SetRotationF(0, 0, 0);
 	///
 
-	entities[0]->SetWorldMatrix(entities[0]->CalculateWorldMatrix(entities[0]));
+	// entities[0]->SetWorldMatrix(entities[0]->CalculateWorldMatrix(entities[0]));
 
 	/// Moving Entity 1
-	entities[1]->SetPosition(0, 0, 5);
-	entities[1]->SetScale(3,3,3);
-	entities[1]->SetRotation(0,0,0);
+	entities[1]->SetPositionF(0, 0, 5);
+	entities[1]->SetScaleF(3,3,3);
+	entities[1]->SetRotationF(0,0,0);
 	///
 
-	entities[1]->SetWorldMatrix(entities[1]->CalculateWorldMatrix(entities[1]));
+	// entities[1]->SetWorldMatrix(entities[1]->CalculateWorldMatrix(entities[1]));
 
 	/// Moving Entity 2
-	entities[2]->SetPosition(-4 , 0, 5);
-	entities[2]->SetScale(3, 3, 3);
-	entities[2]->SetRotation(0, 0, 0);
+	entities[2]->SetPositionF(-4 , 0, 5);
+	entities[2]->SetScaleF(3, 3, 3);
+	entities[2]->SetRotationF(0, 0, 0);
 	///
 
-	entities[2]->SetWorldMatrix(entities[2]->CalculateWorldMatrix(entities[2]));
+	// entities[2]->SetWorldMatrix(entities[2]->CalculateWorldMatrix(entities[2]));
 
 	/// Moving Entity 3
-	entities[3]->SetPosition(-8, 0, 5);
-	entities[3]->SetScale(3, 3, 3);
-	entities[3]->SetRotation(0, 0, 0);
+	entities[3]->SetPositionF(-8, 0, 5);
+	entities[3]->SetScaleF(3, 3, 3);
+	entities[3]->SetRotationF(0, 0, 0);
 
-	entities[3]->SetWorldMatrix(entities[3]->CalculateWorldMatrix(entities[3]));
+	// entities[3]->SetWorldMatrix(entities[3]->CalculateWorldMatrix(entities[3]));
 	///
 
 	/// Moving Entity 4
-	entities[4]->SetPosition(4, 0, 5);
-	entities[4]->SetScale(3, 3, 3);
-	entities[4]->SetRotation(0, 0, 0);
+	entities[4]->SetPositionF(4, 0, 5);
+	entities[4]->SetScaleF(3, 3, 3);
+	entities[4]->SetRotationF(0, 0, 0);
 
-	entities[4]->SetWorldMatrix(entities[4]->CalculateWorldMatrix(entities[4]));
+	// entities[4]->SetWorldMatrix(entities[4]->CalculateWorldMatrix(entities[4]));
 	///
 }
 
@@ -390,7 +402,10 @@ void Game::Draw(float deltaTime, float totalTime)
 	for (int i = 1; i < entities.size(); i++) {
 		entities[i]->PrepareShader(cam->GetViewMatrix(), cam->GetProjectionMatrix());
 
-		vertexShader->SetMatrix4x4("world", entities[i]->GetWorldMatrix());
+		mat4 worldMat = glm::transpose(entities[i]->GetWorldMatrix());
+		float* matarr = &(worldMat[0][0]);
+
+		vertexShader->SetMatrix4x4("world", matarr);
 		vertexShader->CopyAllBufferData();
 
 		ID3D11Buffer * passVB = entities[i]->meshObject->GetVertexBuffer();
