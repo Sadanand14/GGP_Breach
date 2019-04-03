@@ -60,6 +60,9 @@ Game::~Game()
 	depthState->Release();
 	skyDepthState->Release();
 	skyRasterState->Release();
+
+	// Deleting AI
+	delete wayPtsAI;
 }
 
 // --------------------------------------------------------
@@ -129,6 +132,7 @@ void Game::InitVectors()
 	normalMaps.push_back(airTower_Normal);
 	normalMaps.push_back(waterTower_Normal);
 	normalMaps.push_back(fireTower_Normal);
+
 	///
 
 	/// Materials
@@ -180,18 +184,20 @@ void Game::CreateBasicGeometry()
 	entities.push_back(waterTower);
 	entities.push_back(fireTower);
 	///
+
+	wayPtsAI = new AIBehaviors(entities[1]);
 }
 
 void Game::GenerateLights()
 {
 	/// Setting variables for both Directional lights
 	dLight.AmbientColor = XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);
-	dLight.DiffuseColor = XMFLOAT4(0.4f, 0.4f, 0.4f, 0.1f);
-	dLight.Direction = XMFLOAT3(0, 1, 0);
+	dLight.DiffuseColor = XMFLOAT4(0.5f, 0.2f, 1, 1);
+	dLight.Direction = XMFLOAT3(0, -1, 0);
 	dLight.Shine = 25.0f;
 
-	dLight2.AmbientColor = XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);
-	dLight2.DiffuseColor = XMFLOAT4(0.4f, 0.4f, 0.4f, 0.1f);
+	dLight2.AmbientColor = XMFLOAT4(0.1f, 0.1f, 0.05f, 1.0f);
+	dLight2.DiffuseColor = XMFLOAT4(1, 0.2f, 0.3f, 1);
 	dLight2.Direction = XMFLOAT3(0, 1, 0);
 	dLight2.Shine = 52.0f;
 	///
@@ -327,14 +333,19 @@ void Game::Update(float deltaTime, float totalTime)
 	entities[0]->SetPosition(0, 0, 0);
 	entities[0]->SetScale(1, 1, 1);
 	entities[0]->SetRotation(0, 0, 0);
+	
 	///
 
 	entities[0]->SetWorldMatrix(entities[0]->CalculateWorldMatrix(entities[0]));
 
 	/// Moving Entity 1
-	entities[1]->SetPosition(0, 0, 5);
+	// entities[1]->SetPosition(0, 0, 5);
+
+	// entities[1]->SetPosition(-1.5f + 3 * totalTime, 0, 5);
 	entities[1]->SetScale(3,3,3);
 	entities[1]->SetRotation(0,0,0);
+
+	wayPtsAI->WaypointsLerp({ XMFLOAT3(0,0,1), XMFLOAT3(0,0,1) , XMFLOAT3(0,0,1) , XMFLOAT3(0,0,1) , XMFLOAT3(0,0,1) }, totalTime);
 	///
 
 	entities[1]->SetWorldMatrix(entities[1]->CalculateWorldMatrix(entities[1]));
@@ -361,14 +372,6 @@ void Game::Update(float deltaTime, float totalTime)
 	entities[4]->SetRotation(0, 0, 0);
 
 	entities[4]->SetWorldMatrix(entities[4]->CalculateWorldMatrix(entities[4]));
-	///
-
-	/// Moving Entity 5
-	entities[5]->SetPosition(8, 0, 5);
-	entities[5]->SetScale(3, 3, 3);
-	entities[5]->SetRotation(0, 0, 0);
-
-	entities[5]->SetWorldMatrix(entities[5]->CalculateWorldMatrix(entities[5]));
 	///
 }
 

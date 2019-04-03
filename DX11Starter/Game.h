@@ -6,6 +6,7 @@
 #include "Entity.h"
 #include "Camera.h"
 #include "Lights.h"
+#include "AIBehaviors.h"
 
 class Game 
 	: public DXCore
@@ -51,11 +52,13 @@ private:
 	// Enetities
 	std::vector<Entity*> entities;
 	Entity * skyBox = nullptr;
+
 	Entity * battleship = nullptr;
 	Entity * lightningTower = nullptr;
 	Entity * airTower = nullptr;
 	Entity * waterTower = nullptr;
 	Entity * fireTower = nullptr;
+
 
 	// Camera
 	Camera * cam = nullptr;
@@ -85,7 +88,6 @@ private:
 	Texture* airTower_Texture = nullptr;
 	Texture* waterTower_Texture = nullptr;
 	Texture* fireTower_Texture = nullptr;
-	
 
 	// Normals
 	std::vector<Texture*> normalMaps;
@@ -120,5 +122,8 @@ private:
 	ID3D11ShaderResourceView* skyResourceView = nullptr;
 	ID3D11RasterizerState* skyRasterState = nullptr;
 	ID3D11DepthStencilState* skyDepthState = nullptr;
+
+	// AI
+	AIBehaviors* wayPtsAI = nullptr;
 };
 
