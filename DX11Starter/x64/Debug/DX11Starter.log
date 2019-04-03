@@ -1,2 +1,5 @@
 ﻿  Game.cpp
+  Main.cpp
+  Generating Code...
+  LINK : Z:\IGMProfile\Documents\GitHub\GGP_Breach\x64\Debug\DX11Starter.exe not found or not built by the last incremental link; performing full link
   DX11Starter.vcxproj -> Z:\IGMProfile\Documents\GitHub\GGP_Breach\x64\Debug\DX11Starter.exe

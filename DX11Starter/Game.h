@@ -51,11 +51,11 @@ private:
 	// Enetities
 	std::vector<Entity*> entities;
 	Entity * skyBox = nullptr;
-	Entity * obj1 = nullptr;
-	Entity * obj2 = nullptr;
-	Entity * obj3 = nullptr;
-	Entity * obj4 = nullptr;
-	Entity * obj5 = nullptr;
+	Entity * battleship = nullptr;
+	Entity * lightningTower = nullptr;
+	Entity * airTower = nullptr;
+	Entity * waterTower = nullptr;
+	Entity * fireTower = nullptr;
 
 	// Camera
 	Camera * cam = nullptr;
@@ -71,45 +71,45 @@ private:
 	// Materials
 	std::vector<Material*> materials;
 	Material* skyBoxMaterial = nullptr;
-	Material* testMat1 = nullptr;
-	Material* testMat2 = nullptr;
-	Material* testMat3 = nullptr;
-	Material* testMat4 = nullptr;
-	Material* testMat5 = nullptr;
+	Material* battleship_Material = nullptr;
+	Material* lightningTower_Material = nullptr;
+	Material* airTower_Material = nullptr;
+	Material* waterTower_Material = nullptr;
+	Material* fireTower_Material = nullptr;
 
 	// Textures
 	std::vector<Texture*> textures;
 	Texture* skyBoxTexture = nullptr;
-	Texture* testText1 = nullptr;
-	Texture* testText2 = nullptr;
-	Texture* testText3 = nullptr;
-	Texture* testText4 = nullptr;
-	Texture* testText5 = nullptr;
+	Texture* battleship_Texture = nullptr;
+	Texture* lightningTower_Texture = nullptr;
+	Texture* airTower_Texture = nullptr;
+	Texture* waterTower_Texture = nullptr;
+	Texture* fireTower_Texture = nullptr;
 	
 
 	// Normals
 	std::vector<Texture*> normalMaps;
-	Texture* testNorm1 = nullptr;
-	Texture* testNorm2 = nullptr;
-	Texture* testNorm3 = nullptr;
-	Texture* testNorm4 = nullptr;
-	Texture* testNorm5 = nullptr;
+	Texture* battleship_Normal = nullptr;
+	Texture* lightningTower_Normal = nullptr;
+	Texture* airTower_Normal = nullptr;
+	Texture* waterTower_Normal = nullptr;
+	Texture* fireTower_Normal = nullptr;
 
 	// Loading in textures
 	std::vector<ID3D11ShaderResourceView*> textureResources;
-	ID3D11ShaderResourceView* srTest1 = nullptr;
-	ID3D11ShaderResourceView* srTest2 = nullptr;
-	ID3D11ShaderResourceView* srTest3 = nullptr;
-	ID3D11ShaderResourceView* srTest4 = nullptr;
-	ID3D11ShaderResourceView* srTest5 = nullptr;
+	ID3D11ShaderResourceView* battleshipSR = nullptr;
+	ID3D11ShaderResourceView* lightningTowerSR = nullptr;
+	ID3D11ShaderResourceView* airTowerSR = nullptr;
+	ID3D11ShaderResourceView* waterTowerSR = nullptr;
+	ID3D11ShaderResourceView* fireTowerSR = nullptr;
 
 	// Loading in Normals
 	std::vector<ID3D11ShaderResourceView*> normalResources;
-	ID3D11ShaderResourceView* srTestNormal1 = nullptr;
-	ID3D11ShaderResourceView* srTestNormal2 = nullptr;
-	ID3D11ShaderResourceView* srTestNormal3 = nullptr;
-	ID3D11ShaderResourceView* srTestNormal4 = nullptr;
-	ID3D11ShaderResourceView* srTestNormal5 = nullptr;
+	ID3D11ShaderResourceView* battleship_NormalSR = nullptr;
+	ID3D11ShaderResourceView* lightningTower_NormalSR = nullptr;
+	ID3D11ShaderResourceView* airTower_NormalSR = nullptr;
+	ID3D11ShaderResourceView* waterTower_NormalSR = nullptr;
+	ID3D11ShaderResourceView* fireTower_NormalSR = nullptr;
 
 	// Render states
 	ID3D11RasterizerState* rasterState = nullptr;

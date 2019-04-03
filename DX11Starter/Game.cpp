@@ -103,61 +103,61 @@ void Game::InitVectors()
 {
 	/// Textures
 	skyBoxTexture = new Texture();
-	testText1 = new Texture();
-	testText2 = new Texture();
-	testText3 = new Texture();
-	testText4 = new Texture();
-	testText5 = new Texture();
+	battleship_Texture = new Texture();
+	lightningTower_Texture = new Texture();
+	airTower_Texture = new Texture();
+	waterTower_Texture = new Texture();
+	fireTower_Texture = new Texture();
 
 	textures.push_back(skyBoxTexture);
-	textures.push_back(testText1);
-	textures.push_back(testText2);
-	textures.push_back(testText3);
-	textures.push_back(testText4);
-	textures.push_back(testText5);
+	textures.push_back(battleship_Texture);
+	textures.push_back(lightningTower_Texture);
+	textures.push_back(airTower_Texture);
+	textures.push_back(waterTower_Texture);
+	textures.push_back(fireTower_Texture);
 	///
 
 	/// Normal Maps
-	testNorm1 = new Texture();
-	testNorm2 = new Texture();
-	testNorm3 = new Texture();
-	testNorm4 = new Texture();
-	testNorm5 = new Texture();
+	battleship_Normal = new Texture();
+	lightningTower_Normal = new Texture();
+	airTower_Normal = new Texture();
+	waterTower_Normal = new Texture();
+	fireTower_Normal = new Texture();
 
-	normalMaps.push_back(testNorm1);
-	normalMaps.push_back(testNorm2);
-	normalMaps.push_back(testNorm3);
-	normalMaps.push_back(testNorm4);
-	normalMaps.push_back(testNorm5);
+	normalMaps.push_back(battleship_Normal);
+	normalMaps.push_back(lightningTower_Normal);
+	normalMaps.push_back(airTower_Normal);
+	normalMaps.push_back(waterTower_Normal);
+	normalMaps.push_back(fireTower_Normal);
 	///
 
 	/// Materials
 	skyBoxMaterial = new Material();
-	testMat1 = new Material();
-	testMat2 = new Material();
-	testMat3 = new Material();
-	testMat4 = new Material();
-	testMat5 = new Material();
+	battleship_Material = new Material();
+	lightningTower_Material = new Material();
+	airTower_Material = new Material();
+	waterTower_Material = new Material();
+	fireTower_Material = new Material();
 
 	materials.push_back(skyBoxMaterial);
-	materials.push_back(testMat1);
-	materials.push_back(testMat2);
-	materials.push_back(testMat3);
-	materials.push_back(testMat4);
-	materials.push_back(testMat5);
+	materials.push_back(battleship_Material);
+	materials.push_back(lightningTower_Material);
+	materials.push_back(airTower_Material);
+	materials.push_back(waterTower_Material);
+	materials.push_back(fireTower_Material);
 	///
 
-	textureResources.push_back(srTest1);
-	textureResources.push_back(srTest2);
-	textureResources.push_back(srTest3);
-	textureResources.push_back(srTest4);
-	textureResources.push_back(srTest5);
+	textureResources.push_back(battleshipSR);
+	textureResources.push_back(lightningTowerSR);
+	textureResources.push_back(airTowerSR);
+	textureResources.push_back(waterTowerSR);
+	textureResources.push_back(fireTowerSR);
 
-	normalResources.push_back(srTestNormal1);
-	normalResources.push_back(srTestNormal2);
-	normalResources.push_back(srTestNormal3);
-	normalResources.push_back(srTestNormal4);
-	normalResources.push_back(srTestNormal5);
+	normalResources.push_back(battleship_NormalSR);
+	normalResources.push_back(lightningTower_NormalSR);
+	normalResources.push_back(airTower_NormalSR);
+	normalResources.push_back(waterTower_NormalSR);
+	normalResources.push_back(fireTower_NormalSR);
 }
 
 void Game::CreateBasicGeometry()
@@ -167,18 +167,18 @@ void Game::CreateBasicGeometry()
 
 	// Making entities with materials and putting them in the vector
 	skyBox = new Entity("Assets/Models/cube.obj", device, skyBoxMaterial);
-	obj1 = new Entity("Assets/Models/Battleship_TB.obj", device, testMat1);
-	obj2 = new Entity("Assets/Models/LightningTower.obj", device, testMat2);
-	obj3 = new Entity("Assets/Models/AirTower.obj", device, testMat3);
-	obj4 = new Entity("Assets/Models/WaterTower.obj", device, testMat4);
-	obj5 = new Entity("Assets/Models/FireTower.obj", device, testMat5);
+	battleship = new Entity("Assets/Models/Battleship_TB.obj", device, battleship_Material);
+	lightningTower = new Entity("Assets/Models/LightningTower.obj", device, lightningTower_Material);
+	airTower = new Entity("Assets/Models/AirTower.obj", device, airTower_Material);
+	waterTower = new Entity("Assets/Models/WaterTower.obj", device, waterTower_Material);
+	fireTower = new Entity("Assets/Models/FireTower.obj", device, fireTower_Material);
 
 	entities.push_back(skyBox);
-	entities.push_back(obj1);
-	entities.push_back(obj2);
-	entities.push_back(obj3);
-	entities.push_back(obj4);
-	entities.push_back(obj5);
+	entities.push_back(battleship);
+	entities.push_back(lightningTower);
+	entities.push_back(airTower);
+	entities.push_back(waterTower);
+	entities.push_back(fireTower);
 	///
 }
 
@@ -230,27 +230,27 @@ void Game::GenerateMaterials()
 	skyBoxMaterial->CreateMaterial(skyVS, skyPS, skyBoxTexture->GetShaderResourceView(), skyBoxTexture->GetSamplerState());
 
 	/// Textures
-	testText1->CreateTexure(device, context, L"Assets/Textures/BattleShip_Texture.png", &srTest1);
-	testText2->CreateTexure(device, context, L"Assets/Textures/LightningTower_Texture.png", &srTest2);
-	testText3->CreateTexure(device, context, L"Assets/Textures/AirTower_Texture.png", &srTest3);
-	testText4->CreateTexure(device, context, L"Assets/Textures/WaterTower_Texture.png", &srTest4);
-	testText5->CreateTexure(device, context, L"Assets/Textures/FireTower_Texture.png", &srTest5);
+	battleship_Texture ->CreateTexure(device, context, L"Assets/Textures/BattleShip_Texture.png", &battleshipSR);
+	lightningTower_Texture->CreateTexure(device, context, L"Assets/Textures/LightningTower_Texture.png", &lightningTowerSR);
+	airTower_Texture->CreateTexure(device, context, L"Assets/Textures/AirTower_Texture.png", &airTowerSR);
+	waterTower_Texture->CreateTexure(device, context, L"Assets/Textures/WaterTower_Texture.png", &waterTowerSR);
+	fireTower_Texture->CreateTexure(device, context, L"Assets/Textures/FireTower_Texture.png", &fireTowerSR);
 	///
 
 	/// Normals
-	testNorm1->CreateTexure(device, context, L"Assets/Textures/testTextures/Colored_Normal.jpg", &srTestNormal1);
-	testNorm2->CreateTexure(device, context, L"Assets/Textures/testTextures/Rock_Normal.jpg", &srTestNormal2);
-	testNorm3->CreateTexure(device, context, L"Assets/Textures/testTextures/Marble_Normal.jpg", &srTestNormal3);
-	testNorm4->CreateTexure(device, context, L"Assets/Textures/testTextures/Wood_Normal.jpg", &srTestNormal4);
-	testNorm5->CreateTexure(device, context, L"Assets/Textures/testTextures/Wood_Normal.jpg", &srTestNormal5);
+	battleship_Normal->CreateTexure(device, context, L"Assets/Textures/testTextures/Colored_Normal.jpg", &battleship_NormalSR);
+	lightningTower_Normal->CreateTexure(device, context, L"Assets/Textures/testTextures/Rock_Normal.jpg", &lightningTower_NormalSR);
+	airTower_Normal->CreateTexure(device, context, L"Assets/Textures/testTextures/Marble_Normal.jpg", &airTower_NormalSR);
+	waterTower_Normal->CreateTexure(device, context, L"Assets/Textures/testTextures/Wood_Normal.jpg", &waterTower_NormalSR);
+	fireTower_Normal->CreateTexure(device, context, L"Assets/Textures/testTextures/Wood_Normal.jpg", &fireTower_NormalSR);
 	///
 
 	// passing pixel and vertex to materials
-	testMat1->CreateMaterial(vertexShader, pixelShader, testText1->GetShaderResourceView(), testText1->GetSamplerState());
-	testMat2->CreateMaterial(vertexShader, pixelShader, testText2->GetShaderResourceView(), testText2->GetSamplerState());
-	testMat3->CreateMaterial(vertexShader, pixelShader, testText3->GetShaderResourceView(), testText3->GetSamplerState());
-	testMat4->CreateMaterial(vertexShader, pixelShader, testText4->GetShaderResourceView(), testText4->GetSamplerState());
-	testMat5->CreateMaterial(vertexShader, pixelShader, testText5->GetShaderResourceView(), testText5->GetSamplerState());
+	battleship_Material->CreateMaterial(vertexShader, pixelShader, battleship_Texture->GetShaderResourceView(), battleship_Texture->GetSamplerState());
+	lightningTower_Material->CreateMaterial(vertexShader, pixelShader, lightningTower_Texture->GetShaderResourceView(), lightningTower_Texture->GetSamplerState());
+	airTower_Material->CreateMaterial(vertexShader, pixelShader, airTower_Texture->GetShaderResourceView(), airTower_Texture->GetSamplerState());
+	waterTower_Material->CreateMaterial(vertexShader, pixelShader, waterTower_Texture->GetShaderResourceView(), waterTower_Texture->GetSamplerState());
+	fireTower_Material->CreateMaterial(vertexShader, pixelShader, fireTower_Texture->GetShaderResourceView(), fireTower_Texture->GetSamplerState());
 }
 
 void Game::InitStates()
