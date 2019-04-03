@@ -19,7 +19,7 @@ public:
 	~Scene();
 
 	// Spawns a new entity into the scene
-	Entity* SpawnEntity(char* fileName, ID3D11Device* device, Material* mat, Entity* parent = nullptr, const Transform& transform = Transform());
+	Entity* SpawnEntity(Mesh* mesh, Material* mat, Entity* parent = nullptr, const Transform& transform = Transform());
 
 	// Destroys an entity belonging to this scene
 	void DestroyEntity(Entity* entity);

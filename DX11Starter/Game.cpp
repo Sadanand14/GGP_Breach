@@ -35,8 +35,8 @@ Game::~Game()
 	delete skyPS;
 
 	// Deleting entities
-	for (int i = 0; i < entities.size(); i++) {
-		delete entities[i]->meshObject;
+	for (int i = 0; i < meshes.size(); i++) {
+		delete meshes[i];
 	}
 
 	// Deleting textures
@@ -168,19 +168,32 @@ void Game::CreateBasicGeometry()
 	// obj3 = new Entity("Assets/Models/sphere.obj", device, testMat3);
 	// obj4 = new Entity("Assets/Models/sphere.obj", device, testMat4);
 
+	meshes.push_back(new Mesh("Assets/Models/cube.obj", device));
+	meshes.push_back(new Mesh("Assets/Models/sphere.obj", device));
+
 	scene = new Scene();
 
-	skyBox = scene->SpawnEntity("Assets/Models/cube.obj", device, skyBoxMaterial);
-	obj1 = scene->SpawnEntity("Assets/Models/sphere.obj", device, testMat1);
-	obj2 = scene->SpawnEntity("Assets/Models/sphere.obj", device, testMat2);
-	obj3 = scene->SpawnEntity("Assets/Models/sphere.obj", device, testMat3);
-	obj4 = scene->SpawnEntity("Assets/Models/cube.obj", device, testMat4);
+	skyBox = scene->SpawnEntity(meshes[0], skyBoxMaterial);
+	obj1 = scene->SpawnEntity(meshes[1], testMat1);
+	obj2 = scene->SpawnEntity(meshes[1], testMat2);
+	obj3 = scene->SpawnEntity(meshes[1], testMat3);
+	obj4 = scene->SpawnEntity(meshes[1], testMat4);
 
 	entities.push_back(skyBox);
 	entities.push_back(obj1);
 	entities.push_back(obj2);
 	entities.push_back(obj3);
 	entities.push_back(obj4);
+
+	entities.push_back(scene->SpawnEntity(meshes[0], testMat3, nullptr, Transform(glm::vec3(0.0f, -2.5f, 0.0f))));
+
+	for (u64 i = 0; i < 9; ++i)
+	{
+		for (u64 j = 0; j < 9; ++j)
+		{
+			entities.push_back(scene->SpawnEntity(meshes[0], testMat4, nullptr, Transform(glm::vec3(-20.0f + 5.0f * i, -5.0f, -20.0f + 5.0f * j), glm::identity<quat>(), glm::vec3(3.0f))));
+		}
+	}
 	///
 }
 

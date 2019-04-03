@@ -30,14 +30,14 @@ Entity::Entity() :
 	// Nothing interesting to do here
 }
 
-Entity::Entity(Scene* parentScene, u64 ind, u64 sID, u64 tID, char* fileName, ID3D11Device* device, Material* mat, const Transform& t, Entity* parentEntity) :
+Entity::Entity(Scene* parentScene, u64 ind, u64 sID, u64 tID, Mesh* mesh, Material* mat, const Transform& t, Entity* parentEntity) :
 	Object(t, parentEntity),
 	tags(),
 	scene(parentScene, ind, sID, tID),
 	meshObject(nullptr),
 	material(nullptr)
 {
-	meshObject = new Mesh(fileName, device);
+	meshObject = mesh;
 	material = mat;
 }
 

@@ -70,6 +70,9 @@ private:
 	PointLight pLight;
 	PointLight pLight2;
 
+	// Meshes
+	std::vector<Mesh*> meshes;
+
 	// Materials
 	std::vector<Material*> materials;
 	Material* skyBoxMaterial = nullptr;

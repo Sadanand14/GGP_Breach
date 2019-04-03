@@ -29,7 +29,7 @@ public:
 	Material * material = nullptr;
 
 	Entity();
-	Entity(Scene* parentScene, u64 ind, u64 sID, u64 tID, char* fileName, ID3D11Device* device, Material* mat, const Transform& t = Transform(), Entity* parentEntity = nullptr);
+	Entity(Scene* parentScene, u64 ind, u64 sID, u64 tID, Mesh* mesh, Material* mat, const Transform& t = Transform(), Entity* parentEntity = nullptr);
 	~Entity();
 
 	inline void SetPositionF(float x, float y, float z) { SetPositionWorld(glm::vec3(x, y, z)); }

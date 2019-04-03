@@ -18,7 +18,7 @@ Scene::~Scene()
 	// Nothing interesting to do here
 }
 
-Entity* Scene::SpawnEntity(char* fileName, ID3D11Device* device, Material* mat, Entity* parent, const Transform& transform)
+Entity* Scene::SpawnEntity(Mesh* mesh, Material* mat, Entity* parent, const Transform& transform)
 {
 	// Index at which the entity will be spawned into the entities array
 	u64 index;
@@ -28,13 +28,13 @@ Entity* Scene::SpawnEntity(char* fileName, ID3D11Device* device, Material* mat, 
 	{
 		index = entityArrayGaps[entityArrayGaps.size() - 1];
 		entityArrayGaps.pop_back();
-		entities[index] = Entity(this, index, entitiesAll.size(), parent == nullptr ? entitiesTop.size() : U64_MAX, fileName, device, mat, transform, parent);
+		entities[index] = Entity(this, index, entitiesAll.size(), parent == nullptr ? entitiesTop.size() : U64_MAX, mesh, mat, transform, parent);
 	}
 	// Otherwise, add to the end of the array
 	else
 	{
 		index = entities.size();
-		entities.push_back(Entity(this, index, entitiesAll.size(), parent == nullptr ? entitiesTop.size() : U64_MAX, fileName, device, mat, transform, parent));
+		entities.push_back(Entity(this, index, entitiesAll.size(), parent == nullptr ? entitiesTop.size() : U64_MAX, mesh, mat, transform, parent));
 	}
 
 	// Handle pointer referencing for the new entity
