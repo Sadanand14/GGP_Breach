@@ -186,12 +186,12 @@ void Game::GenerateLights()
 {
 	/// Setting variables for both Directional lights
 	dLight.AmbientColor = XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);
-	dLight.DiffuseColor = XMFLOAT4(0.5f, 0.2f, 1, 1);
-	dLight.Direction = XMFLOAT3(0, -1, 0);
+	dLight.DiffuseColor = XMFLOAT4(0.4f, 0.4f, 0.4f, 0.1f);
+	dLight.Direction = XMFLOAT3(0, 1, 0);
 	dLight.Shine = 25.0f;
 
-	dLight2.AmbientColor = XMFLOAT4(0.1f, 0.1f, 0.05f, 1.0f);
-	dLight2.DiffuseColor = XMFLOAT4(1, 0.2f, 0.3f, 1);
+	dLight2.AmbientColor = XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);
+	dLight2.DiffuseColor = XMFLOAT4(0.4f, 0.4f, 0.4f, 0.1f);
 	dLight2.Direction = XMFLOAT3(0, 1, 0);
 	dLight2.Shine = 52.0f;
 	///
@@ -242,6 +242,7 @@ void Game::GenerateMaterials()
 	testNorm2->CreateTexure(device, context, L"Assets/Textures/testTextures/Rock_Normal.jpg", &srTestNormal2);
 	testNorm3->CreateTexure(device, context, L"Assets/Textures/testTextures/Marble_Normal.jpg", &srTestNormal3);
 	testNorm4->CreateTexure(device, context, L"Assets/Textures/testTextures/Wood_Normal.jpg", &srTestNormal4);
+	testNorm5->CreateTexure(device, context, L"Assets/Textures/testTextures/Wood_Normal.jpg", &srTestNormal5);
 	///
 
 	// passing pixel and vertex to materials
