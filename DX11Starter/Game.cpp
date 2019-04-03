@@ -107,12 +107,14 @@ void Game::InitVectors()
 	testText2 = new Texture();
 	testText3 = new Texture();
 	testText4 = new Texture();
+	testText5 = new Texture();
 
 	textures.push_back(skyBoxTexture);
 	textures.push_back(testText1);
 	textures.push_back(testText2);
 	textures.push_back(testText3);
 	textures.push_back(testText4);
+	textures.push_back(testText5);
 	///
 
 	/// Normal Maps
@@ -120,11 +122,13 @@ void Game::InitVectors()
 	testNorm2 = new Texture();
 	testNorm3 = new Texture();
 	testNorm4 = new Texture();
+	testNorm5 = new Texture();
 
 	normalMaps.push_back(testNorm1);
 	normalMaps.push_back(testNorm2);
 	normalMaps.push_back(testNorm3);
 	normalMaps.push_back(testNorm4);
+	normalMaps.push_back(testNorm5);
 	///
 
 	/// Materials
@@ -133,23 +137,27 @@ void Game::InitVectors()
 	testMat2 = new Material();
 	testMat3 = new Material();
 	testMat4 = new Material();
+	testMat5 = new Material();
 
 	materials.push_back(skyBoxMaterial);
 	materials.push_back(testMat1);
 	materials.push_back(testMat2);
 	materials.push_back(testMat3);
 	materials.push_back(testMat4);
+	materials.push_back(testMat5);
 	///
 
 	textureResources.push_back(srTest1);
 	textureResources.push_back(srTest2);
 	textureResources.push_back(srTest3);
 	textureResources.push_back(srTest4);
+	textureResources.push_back(srTest5);
 
 	normalResources.push_back(srTestNormal1);
 	normalResources.push_back(srTestNormal2);
 	normalResources.push_back(srTestNormal3);
 	normalResources.push_back(srTestNormal4);
+	normalResources.push_back(srTestNormal5);
 }
 
 void Game::CreateBasicGeometry()
@@ -159,16 +167,18 @@ void Game::CreateBasicGeometry()
 
 	// Making entities with materials and putting them in the vector
 	skyBox = new Entity("Assets/Models/cube.obj", device, skyBoxMaterial);
-	obj1 = new Entity("Assets/Models/sphere.obj", device, testMat1);
-	obj2 = new Entity("Assets/Models/sphere.obj", device, testMat2);
-	obj3 = new Entity("Assets/Models/sphere.obj", device, testMat3);
-	obj4 = new Entity("Assets/Models/sphere.obj", device, testMat4);
+	obj1 = new Entity("Assets/Models/Battleship_TB.obj", device, testMat1);
+	obj2 = new Entity("Assets/Models/LightningTower.obj", device, testMat2);
+	obj3 = new Entity("Assets/Models/AirTower.obj", device, testMat3);
+	obj4 = new Entity("Assets/Models/WaterTower.obj", device, testMat4);
+	obj5 = new Entity("Assets/Models/FireTower.obj", device, testMat5);
 
 	entities.push_back(skyBox);
 	entities.push_back(obj1);
 	entities.push_back(obj2);
 	entities.push_back(obj3);
 	entities.push_back(obj4);
+	entities.push_back(obj5);
 	///
 }
 
@@ -176,12 +186,12 @@ void Game::GenerateLights()
 {
 	/// Setting variables for both Directional lights
 	dLight.AmbientColor = XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);
-	dLight.DiffuseColor = XMFLOAT4(0.5f, 0.2f, 1, 1);
-	dLight.Direction = XMFLOAT3(0, -1, 0);
+	dLight.DiffuseColor = XMFLOAT4(0.4f, 0.4f, 0.4f, 0.1f);
+	dLight.Direction = XMFLOAT3(0, 1, 0);
 	dLight.Shine = 25.0f;
 
-	dLight2.AmbientColor = XMFLOAT4(0.1f, 0.1f, 0.05f, 1.0f);
-	dLight2.DiffuseColor = XMFLOAT4(1, 0.2f, 0.3f, 1);
+	dLight2.AmbientColor = XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);
+	dLight2.DiffuseColor = XMFLOAT4(0.4f, 0.4f, 0.4f, 0.1f);
 	dLight2.Direction = XMFLOAT3(0, 1, 0);
 	dLight2.Shine = 52.0f;
 	///
@@ -220,10 +230,11 @@ void Game::GenerateMaterials()
 	skyBoxMaterial->CreateMaterial(skyVS, skyPS, skyBoxTexture->GetShaderResourceView(), skyBoxTexture->GetSamplerState());
 
 	/// Textures
-	testText1->CreateTexure(device, context, L"Assets/Textures/testTextures/Colored.jpg", &srTest1);
-	testText2->CreateTexure(device, context, L"Assets/Textures/testTextures/Rock.jpg", &srTest2);
-	testText3->CreateTexure(device, context, L"Assets/Textures/testTextures/Marble.jpg", &srTest3);
-	testText4->CreateTexure(device, context, L"Assets/Textures/testTextures/Wood.jpg", &srTest4);
+	testText1->CreateTexure(device, context, L"Assets/Textures/BattleShip_Texture.png", &srTest1);
+	testText2->CreateTexure(device, context, L"Assets/Textures/LightningTower_Texture.png", &srTest2);
+	testText3->CreateTexure(device, context, L"Assets/Textures/AirTower_Texture.png", &srTest3);
+	testText4->CreateTexure(device, context, L"Assets/Textures/WaterTower_Texture.png", &srTest4);
+	testText5->CreateTexure(device, context, L"Assets/Textures/FireTower_Texture.png", &srTest5);
 	///
 
 	/// Normals
@@ -231,13 +242,15 @@ void Game::GenerateMaterials()
 	testNorm2->CreateTexure(device, context, L"Assets/Textures/testTextures/Rock_Normal.jpg", &srTestNormal2);
 	testNorm3->CreateTexure(device, context, L"Assets/Textures/testTextures/Marble_Normal.jpg", &srTestNormal3);
 	testNorm4->CreateTexure(device, context, L"Assets/Textures/testTextures/Wood_Normal.jpg", &srTestNormal4);
+	testNorm5->CreateTexure(device, context, L"Assets/Textures/testTextures/Wood_Normal.jpg", &srTestNormal5);
 	///
 
 	// passing pixel and vertex to materials
-	testMat1->CreateNormalMaterial(vertexShader, pixelShader, testText1->GetShaderResourceView(), testNorm1->GetShaderResourceView(), testText1->GetSamplerState());
-	testMat2->CreateNormalMaterial(vertexShader, pixelShader, testText2->GetShaderResourceView(), testNorm2->GetShaderResourceView(), testText2->GetSamplerState());
-	testMat3->CreateNormalMaterial(vertexShader, pixelShader, testText3->GetShaderResourceView(), testNorm3->GetShaderResourceView(), testText3->GetSamplerState());
-	testMat4->CreateNormalMaterial(vertexShader, pixelShader, testText4->GetShaderResourceView(), testNorm4->GetShaderResourceView(), testText4->GetSamplerState());
+	testMat1->CreateMaterial(vertexShader, pixelShader, testText1->GetShaderResourceView(), testText1->GetSamplerState());
+	testMat2->CreateMaterial(vertexShader, pixelShader, testText2->GetShaderResourceView(), testText2->GetSamplerState());
+	testMat3->CreateMaterial(vertexShader, pixelShader, testText3->GetShaderResourceView(), testText3->GetSamplerState());
+	testMat4->CreateMaterial(vertexShader, pixelShader, testText4->GetShaderResourceView(), testText4->GetSamplerState());
+	testMat5->CreateMaterial(vertexShader, pixelShader, testText5->GetShaderResourceView(), testText5->GetSamplerState());
 }
 
 void Game::InitStates()
@@ -348,6 +361,14 @@ void Game::Update(float deltaTime, float totalTime)
 	entities[4]->SetRotation(0, 0, 0);
 
 	entities[4]->SetWorldMatrix(entities[4]->CalculateWorldMatrix(entities[4]));
+	///
+
+	/// Moving Entity 5
+	entities[5]->SetPosition(8, 0, 5);
+	entities[5]->SetScale(3, 3, 3);
+	entities[5]->SetRotation(0, 0, 0);
+
+	entities[5]->SetWorldMatrix(entities[5]->CalculateWorldMatrix(entities[5]));
 	///
 }
 
