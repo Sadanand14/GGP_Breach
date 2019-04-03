@@ -55,6 +55,7 @@ private:
 	Entity * obj2 = nullptr;
 	Entity * obj3 = nullptr;
 	Entity * obj4 = nullptr;
+	Entity * obj5 = nullptr;
 
 	// Camera
 	Camera * cam = nullptr;
@@ -74,6 +75,7 @@ private:
 	Material* testMat2 = nullptr;
 	Material* testMat3 = nullptr;
 	Material* testMat4 = nullptr;
+	Material* testMat5 = nullptr;
 
 	// Textures
 	std::vector<Texture*> textures;
@@ -82,6 +84,7 @@ private:
 	Texture* testText2 = nullptr;
 	Texture* testText3 = nullptr;
 	Texture* testText4 = nullptr;
+	Texture* testText5 = nullptr;
 	
 
 	// Normals
@@ -90,6 +93,7 @@ private:
 	Texture* testNorm2 = nullptr;
 	Texture* testNorm3 = nullptr;
 	Texture* testNorm4 = nullptr;
+	Texture* testNorm5 = nullptr;
 
 	// Loading in textures
 	std::vector<ID3D11ShaderResourceView*> textureResources;
@@ -97,6 +101,7 @@ private:
 	ID3D11ShaderResourceView* srTest2 = nullptr;
 	ID3D11ShaderResourceView* srTest3 = nullptr;
 	ID3D11ShaderResourceView* srTest4 = nullptr;
+	ID3D11ShaderResourceView* srTest5 = nullptr;
 
 	// Loading in Normals
 	std::vector<ID3D11ShaderResourceView*> normalResources;
@@ -104,6 +109,7 @@ private:
 	ID3D11ShaderResourceView* srTestNormal2 = nullptr;
 	ID3D11ShaderResourceView* srTestNormal3 = nullptr;
 	ID3D11ShaderResourceView* srTestNormal4 = nullptr;
+	ID3D11ShaderResourceView* srTestNormal5 = nullptr;
 
 	// Render states
 	ID3D11RasterizerState* rasterState = nullptr;
