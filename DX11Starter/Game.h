@@ -23,6 +23,7 @@ public:
 	void Update(float deltaTime, float totalTime);
 	void Draw(float deltaTime, float totalTime);
 	void DrawSky();
+	void RenderShadowMap();
 
 	// Overridden mouse input helper methods
 	void OnMouseDown (WPARAM buttonState, int x, int y);
@@ -125,5 +126,15 @@ private:
 
 	// AI
 	AIBehaviors* wayPtsAI = nullptr;
+
+	//Shadowmap Resources
+	int nShadowMapSize;
+	ID3D11DepthStencilView* shadowDSV;
+	ID3D11ShaderResourceView* shadowSRV;
+	ID3D11SamplerState* shadowSamplerState;
+	ID3D11RasterizerState* shadowRasterizer;
+	SimpleVertexShader* shadowVS;
+	DirectX::XMFLOAT4X4 dirLightProjection;
+	DirectX::XMFLOAT4X4 dirLightView;
 };
 
