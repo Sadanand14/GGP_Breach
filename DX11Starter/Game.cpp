@@ -211,6 +211,8 @@ void Game::CreateBasicGeometry()
 	waterTower     = scene->SpawnEntity(meshes[5], waterTower_Material);
 	fireTower      = scene->SpawnEntity(meshes[6], fireTower_Material);
 
+	// lightningTower->SetParent(battleship, false);
+
 	entities.push_back(skyBox);
 	entities.push_back(battleship);
 	entities.push_back(lightningTower);
@@ -219,18 +221,28 @@ void Game::CreateBasicGeometry()
 	entities.push_back(fireTower);
 	///
 	wayPtsAI = new AIBehaviors(entities[1]);
+
+	//entities.push_back(scene->SpawnEntity(meshes[0], waterTower_Material, nullptr, Transform(glm::vec3(0.0f, -2.5f, 0.0f))));
+
+	for (u64 i = 0; i < 9; ++i)
+	{
+		for (u64 j = 0; j < 9; ++j)
+		{
+			//entities.push_back(scene->SpawnEntity(meshes[0], waterTower_Material, nullptr, Transform(glm::vec3(-60.0f + 15.0f * i, -2.0f, -60.0f + 15.0f * j), glm::identity<quat>(), glm::vec3(10.0f))));
+		}
+	}
 }
 
 void Game::GenerateLights()
 {
 	/// Setting variables for both Directional lights
 	dLight.AmbientColor = XMFLOAT4(0.1f, 0.1f, 0.1f, 1.0f);
-	dLight.DiffuseColor = XMFLOAT4(0.5f, 0.2f, 1, 1);
+	dLight.DiffuseColor = XMFLOAT4(0.4f, 0.4f, 0.4f, 0.1f);
 	dLight.Direction = XMFLOAT3(0, -1, 0);
 	dLight.Shine = 25.0f;
 
 	dLight2.AmbientColor = XMFLOAT4(0.1f, 0.1f, 0.05f, 1.0f);
-	dLight2.DiffuseColor = XMFLOAT4(1, 0.2f, 0.3f, 1);
+	dLight2.DiffuseColor = XMFLOAT4(0.4f, 0.4f, 0.4f, 0.1f);
 	dLight2.Direction = XMFLOAT3(0, 1, 0);
 	dLight2.Shine = 52.0f;
 	///
@@ -452,27 +464,32 @@ void Game::Update(float deltaTime, float totalTime)
 	///
 
 	/// Moving Entity 1
-	entities[1]->SetPositionF(0, 0, 5);
+	entities[1]->SetPositionF(20, 0, 0);
 	entities[1]->SetScaleF(3,3,3);
 	entities[1]->SetRotationF(0,0,0);
 	///
 
 	/// Moving Entity 2
-	entities[2]->SetPositionF(-4 , 0, 5);
+	entities[2]->SetPositionF(-10 , 0, -15);
 	entities[2]->SetScaleF(3, 3, 3);
 	entities[2]->SetRotationF(0, 0, 0);
-	///
 
 	/// Moving Entity 3
-	entities[3]->SetPositionF(-8, 0, 5);
+	entities[3]->SetPositionF(0, 0, 15);
 	entities[3]->SetScaleF(3, 3, 3);
 	entities[3]->SetRotationF(0, 0, 0);
 	///
 
 	/// Moving Entity 4
-	entities[4]->SetPositionF(4, 0, 5);
+	entities[4]->SetPositionF(10, 0, 20);
 	entities[4]->SetScaleF(3, 3, 3);
 	entities[4]->SetRotationF(0, 0, 0);
+	///
+
+	/// Moving Entity 5
+	entities[5]->SetPositionF(10, 0, -20);
+	entities[5]->SetScaleF(3, 3, 3);
+	entities[5]->SetRotationF(0, 0, 0);
 	///
 
 	switch (wayPtsAI->lerpPeriods) {
@@ -486,7 +503,7 @@ void Game::Update(float deltaTime, float totalTime)
 // --------------------------------------------------------
 void Game::Draw(float deltaTime, float totalTime)
 {
-	RenderShadowMap();
+	//RenderShadowMap();
 
 	// Background color (Cornflower Blue in this case) for clearing
 	const float color[4] = { 0.4f, 0.6f, 0.75f, 0.0f };

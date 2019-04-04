@@ -166,8 +166,8 @@ float4 main(VertexToPixel input) : SV_TARGET
 	///
 
 	// Directional light calculations for both Lambert and Phong shading
-	return (DirectLightLambert(input, DLight) + DirectLightLambert(input, DLight2));
-	//return (DirectLightPhong(input, DLight) + DirectLightPhong(input, DLight2));
+	//return (DirectLightLambert(input, DLight) + DirectLightLambert(input, DLight2));
+	return (DirectLightPhong(input, DLight) + DirectLightPhong(input, DLight2));
 
 	// Point light calculations for both Lambert and Phong shading
 	//return (PointLightLambert(input, PLight) + PointLightLambert(input, PLight2));

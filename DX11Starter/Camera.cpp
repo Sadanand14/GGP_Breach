@@ -5,7 +5,7 @@ using namespace DirectX;
 Camera::Camera()
 {
 	// Setting intial values
-	camPos = XMVectorSet(0, 0, -5, 0);
+	camPos = XMVectorSet(0, 15, -5, 0);
 	camRotX = 0.0f;
 	camRotY = 0.0f;
 	cameraSpeed = 13.5f;
