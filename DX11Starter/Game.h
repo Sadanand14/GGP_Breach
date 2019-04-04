@@ -40,12 +40,16 @@ private:
 	void GenerateMaterials();
 	void InitStates();
 	void InitVectors();
+	void LoadHeightTexture();
+	void GenerateTerrainVertices(std::vector<float> heightList);
 
 	// Wrappers for DirectX shaders to provide simplified functionality
-	SimpleVertexShader* vertexShader;
-	SimplePixelShader* pixelShader;
+	SimpleVertexShader* vertexShader = nullptr;
+	SimplePixelShader* pixelShader = nullptr;
 	SimpleVertexShader* skyVS = nullptr;
 	SimplePixelShader* skyPS = nullptr;
+	SimpleVertexShader* terrainVS = nullptr;
+	SimplePixelShader* terrainPS = nullptr;
 
 	// Keeps track of the old mouse position.  Useful for 
 	// determining how far the mouse moved in a single frame.

@@ -38,6 +38,8 @@ Game::~Game()
 	delete skyVS;
 	delete skyPS;
 	delete shadowVS;
+	delete terrainPS;
+	delete terrainVS;
 
 	// Deleting entities
 	for (int i = 0; i < meshes.size(); i++) {
@@ -118,6 +120,12 @@ void Game::LoadShaders()
 
 	shadowVS = new SimpleVertexShader(device, context);
 	shadowVS->LoadShaderFile(L"ShadowVS.cso");
+
+	terrainVS = new SimpleVertexShader(device, context);
+	terrainVS->LoadShaderFile(L"TerrainVS.cso");
+
+	terrainPS = new SimplePixelShader(device, context);
+	terrainPS->LoadShaderFile(L"TerrainPS.cso");
 }
 
 void Game::InitVectors()
@@ -256,6 +264,27 @@ void Game::GenerateLights()
 	pixelShader->CopyAllBufferData();
 }
 
+void Game::LoadHeightTexture()
+{
+	//assuming its a 512 resolution heightmap
+	std::vector<unsigned char>	heights(512 * 512);
+
+	std::ifstream file;
+	file.open("Assets\Textures\Terrain/terrain.raw", std::ios_base::binary);
+
+	if (file)
+	{
+		file.read((char*)&heights[0], (std::streamsize)file.tellg());
+		file.close();
+	}
+
+	std::vector<float> finalHeights(512 * 512);
+	for (int i = 0; i < 512 * 512; i++)
+	{
+		finalHeights[i] = (heights[i] / 255.0f)* 0.5;
+	}
+}
+
 void Game::GenerateMaterials()
 {
 	// Skybox Texture
@@ -390,7 +419,10 @@ void Game::InitStates()
 	device->CreateRasterizerState(&shadowRastDesc, &shadowRasterizer);
 }
 
+void Game::GenerateTerrainVertices(std::vector<float> heightList)
+{
 
+}
 
 void Game::OnResize()
 {

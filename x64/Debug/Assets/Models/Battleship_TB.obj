@@ -1,6 +1,6 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
-mtllib BattleShip_TB.mtl
+mtllib BattleShip.mtl
 g default
 v 9.926119 0.203081 -8.823983
 v 5.868521 0.592781 -9.481181

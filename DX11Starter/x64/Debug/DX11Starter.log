@@ -1,11 +1,1 @@
-﻿  Game.cpp
-z:\igmprofile\desktop\ggp_breach\dx11starter\types.h(36): warning C4005: 'U08_MAX': macro redefinition
-  z:\igmprofile\desktop\ggp_breach\dx11starter\types.h(26): note: see previous definition of 'U08_MAX'
-z:\igmprofile\desktop\ggp_breach\dx11starter\types.h(37): warning C4005: 'U16_MAX': macro redefinition
-  z:\igmprofile\desktop\ggp_breach\dx11starter\types.h(27): note: see previous definition of 'U16_MAX'
-z:\igmprofile\desktop\ggp_breach\dx11starter\types.h(38): warning C4005: 'U32_MAX': macro redefinition
-  z:\igmprofile\desktop\ggp_breach\dx11starter\types.h(28): note: see previous definition of 'U32_MAX'
-z:\igmprofile\desktop\ggp_breach\dx11starter\types.h(39): warning C4005: 'U64_MAX': macro redefinition
-  z:\igmprofile\desktop\ggp_breach\dx11starter\types.h(29): note: see previous definition of 'U64_MAX'
-z:\igmprofile\desktop\ggp_breach\dx11starter\game.cpp(460): warning C4060: switch statement contains no 'case' or 'default' labels
-  DX11Starter.vcxproj -> Z:\IGMProfile\Desktop\GGP_Breach\x64\Debug\DX11Starter.exe
+﻿  DX11Starter.vcxproj -> Z:\IGMProfile\Documents\GitHub\GGP_Breach\x64\Debug\DX11Starter.exe

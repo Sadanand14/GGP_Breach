@@ -14,3 +14,10 @@ struct Vertex
 	DirectX::XMFLOAT2 UV;			// UV's of the model
 	DirectX::XMFLOAT3 Tangent;		// normal mapping
 };
+
+struct TerrainVertex
+{
+	DirectX::XMFLOAT3 Position;
+	DirectX::XMFLOAT3 Normal;
+	DirectX::XMFLOAT2 UV;
+};
