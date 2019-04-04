@@ -50,6 +50,9 @@ private:
 	// determining how far the mouse moved in a single frame.
 	POINT prevMousePos;
 
+	// The scene
+	Scene* scene;
+
 	// Enetities
 	std::vector<Entity*> entities;
 	Entity * skyBox = nullptr;
@@ -71,6 +74,9 @@ private:
 	// Point Lights
 	PointLight pLight;
 	PointLight pLight2;
+
+	// Meshes
+	std::vector<Mesh*> meshes;
 
 	// Materials
 	std::vector<Material*> materials;

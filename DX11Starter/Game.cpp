@@ -1,5 +1,7 @@
 #include "Game.h"
 
+#include "Scene.h"
+
 // For the DirectX Math library
 using namespace DirectX;
 
@@ -37,8 +39,8 @@ Game::~Game()
 	delete shadowVS;
 
 	// Deleting entities
-	for (int i = 0; i < entities.size(); i++) {
-		delete entities[i];
+	for (int i = 0; i < meshes.size(); i++) {
+		delete meshes[i];
 	}
 
 	// Deleting textures
@@ -55,6 +57,8 @@ Game::~Game()
 	for (int i = 0; i < materials.size(); i++) {
 		delete materials[i];
 	}
+
+	delete scene;
 
 	// Deleting cam
 	delete cam;
@@ -182,13 +186,26 @@ void Game::CreateBasicGeometry()
 	cam = new Camera();
 	cam->UpdateProjectionMatrix((float)width / height);
 
-	// Making entities with materials and putting them in the vector
-	skyBox = new Entity("Assets/Models/cube.obj", device, skyBoxMaterial);
-	battleship = new Entity("Assets/Models/Battleship_TB.obj", device, battleship_Material);
-	lightningTower = new Entity("Assets/Models/LightningTower.obj", device, lightningTower_Material);
-	airTower = new Entity("Assets/Models/AirTower.obj", device, airTower_Material);
-	waterTower = new Entity("Assets/Models/WaterTower.obj", device, waterTower_Material);
-	fireTower = new Entity("Assets/Models/FireTower.obj", device, fireTower_Material);
+	scene = new Scene();
+
+	meshes.reserve(10000);
+
+	meshes.push_back(new Mesh("Assets/Models/cube.obj", device));
+	meshes.push_back(new Mesh("Assets/Models/sphere.obj", device));
+
+	meshes.push_back(new Mesh("Assets/Models/cube.obj", device));
+	meshes.push_back(new Mesh("Assets/Models/Battleship_TB.obj", device));
+	meshes.push_back(new Mesh("Assets/Models/LightningTower.obj", device));
+	meshes.push_back(new Mesh("Assets/Models/AirTower.obj", device));
+	meshes.push_back(new Mesh("Assets/Models/WaterTower.obj", device));
+	meshes.push_back(new Mesh("Assets/Models/FireTower.obj", device));
+
+	skyBox         = scene->SpawnEntity(meshes[0], skyBoxMaterial);
+	battleship     = scene->SpawnEntity(meshes[3], battleship_Material);
+	lightningTower = scene->SpawnEntity(meshes[4], lightningTower_Material);
+	airTower       = scene->SpawnEntity(meshes[5], airTower_Material);
+	waterTower     = scene->SpawnEntity(meshes[6], waterTower_Material);
+	fireTower      = scene->SpawnEntity(meshes[7], fireTower_Material);
 
 	entities.push_back(skyBox);
 	entities.push_back(battleship);
@@ -196,6 +213,18 @@ void Game::CreateBasicGeometry()
 	entities.push_back(airTower);
 	entities.push_back(waterTower);
 	entities.push_back(fireTower);
+
+	
+	entities.push_back(scene->SpawnEntity(meshes[0], waterTower_Material, nullptr, Transform(glm::vec3(0.0f, -2.5f, 0.0f))));
+
+	for (u64 i = 0; i < 9; ++i)
+	{
+		for (u64 j = 0; j < 9; ++j)
+		{
+			entities.push_back(scene->SpawnEntity(meshes[0], waterTower_Material, nullptr, Transform(glm::vec3(-60.0f + 15.0f * i, -2.0f, -60.0f + 15.0f * j), glm::identity<quat>(), glm::vec3(10.0f))));
+		}
+	}
+	
 	///
 
 	wayPtsAI = new AIBehaviors(entities[1]);
@@ -403,48 +432,45 @@ void Game::Update(float deltaTime, float totalTime)
 	float sinTime = (sin(totalTime * 10) + 2.0f) / 5.0f;
 
 	// SkyBox
-	entities[0]->SetPosition(0, 0, 0);
-	entities[0]->SetScale(1, 1, 1);
-	entities[0]->SetRotation(0, 0, 0);
-	
+	entities[0]->SetPositionF(0, 0, 0);
+	entities[0]->SetScaleF(1, 1, 1);
+	entities[0]->SetRotationF(0, 0, 0);
 	///
 
-	entities[0]->SetWorldMatrix(entities[0]->CalculateWorldMatrix(entities[0]));
+	// entities[0]->SetWorldMatrix(entities[0]->CalculateWorldMatrix(entities[0]));
 
 	/// Moving Entity 1
-	// entities[1]->SetPosition(0, 0, 5);
-
-	// entities[1]->SetPosition(-1.5f + 3 * totalTime, 0, 5);
-	entities[1]->SetScale(3,3,3);
-	entities[1]->SetRotation(0,0,0);
+	entities[1]->SetPositionF(0, 0, 5);
+	entities[1]->SetScaleF(3,3,3);
+	entities[1]->SetRotationF(0,0,0);
 
 	wayPtsAI->WaypointsLerp({ XMFLOAT3(0,0,1), XMFLOAT3(0,0,1) , XMFLOAT3(0,0,1) , XMFLOAT3(0,0,1) , XMFLOAT3(0,0,1) }, totalTime);
 	///
 
-	entities[1]->SetWorldMatrix(entities[1]->CalculateWorldMatrix(entities[1]));
+	// entities[1]->SetWorldMatrix(entities[1]->CalculateWorldMatrix(entities[1]));
 
 	/// Moving Entity 2
-	entities[2]->SetPosition(-4 , 0, 5);
-	entities[2]->SetScale(3, 3, 3);
-	entities[2]->SetRotation(0, 0, 0);
+	entities[2]->SetPositionF(-4 , 0, 5);
+	entities[2]->SetScaleF(3, 3, 3);
+	entities[2]->SetRotationF(0, 0, 0);
 	///
 
-	entities[2]->SetWorldMatrix(entities[2]->CalculateWorldMatrix(entities[2]));
+	// entities[2]->SetWorldMatrix(entities[2]->CalculateWorldMatrix(entities[2]));
 
 	/// Moving Entity 3
-	entities[3]->SetPosition(-8, 0, 5);
-	entities[3]->SetScale(3, 3, 3);
-	entities[3]->SetRotation(0, 0, 0);
+	entities[3]->SetPositionF(-8, 0, 5);
+	entities[3]->SetScaleF(3, 3, 3);
+	entities[3]->SetRotationF(0, 0, 0);
 
-	entities[3]->SetWorldMatrix(entities[3]->CalculateWorldMatrix(entities[3]));
+	// entities[3]->SetWorldMatrix(entities[3]->CalculateWorldMatrix(entities[3]));
 	///
 
 	/// Moving Entity 4
-	entities[4]->SetPosition(4, 0, 5);
-	entities[4]->SetScale(3, 3, 3);
-	entities[4]->SetRotation(0, 0, 0);
+	entities[4]->SetPositionF(4, 0, 5);
+	entities[4]->SetScaleF(3, 3, 3);
+	entities[4]->SetRotationF(0, 0, 0);
 
-	entities[4]->SetWorldMatrix(entities[4]->CalculateWorldMatrix(entities[4]));
+	// entities[4]->SetWorldMatrix(entities[4]->CalculateWorldMatrix(entities[4]));
 	///
 }
 
@@ -489,7 +515,10 @@ void Game::Draw(float deltaTime, float totalTime)
 	for (int i = 1; i < entities.size(); i++) {
 		entities[i]->PrepareShader(cam->GetViewMatrix(), cam->GetProjectionMatrix());
 
-		vertexShader->SetMatrix4x4("world", entities[i]->GetWorldMatrix());
+		mat4 worldMat = glm::transpose(entities[i]->GetWorldMatrix());
+		float* matarr = &(worldMat[0][0]);
+
+		vertexShader->SetMatrix4x4("world", matarr);
 		vertexShader->CopyAllBufferData();
 
 		ID3D11Buffer * passVB = entities[i]->meshObject->GetVertexBuffer();
@@ -581,12 +610,16 @@ void Game::RenderShadowMap()
 		ID3D11Buffer* vb = currentEntity->meshObject->GetVertexBuffer();
 		ID3D11Buffer* ib = currentEntity->meshObject->GetIndexBuffer();
 
+		// printf("%d    %d", vb, ib);
+
 
 		context->IASetVertexBuffers(0, 1, &vb, &stride, &offset);
 		context->IASetIndexBuffer(ib, DXGI_FORMAT_R32_UINT, 0);
 
+		mat4 worldMat = glm::transpose(entities[i]->GetWorldMatrix());
+		float* matarr = &(worldMat[0][0]);
 
-		shadowVS->SetMatrix4x4("world", currentEntity->GetWorldMatrix());
+		shadowVS->SetMatrix4x4("world", matarr);
 		shadowVS->CopyAllBufferData();
 
 

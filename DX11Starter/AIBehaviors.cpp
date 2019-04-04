@@ -10,7 +10,7 @@ AIBehaviors::AIBehaviors(Entity* ai)
 
 AIBehaviors::~AIBehaviors()
 {
-	delete this->agent;
+	// delete this->agent;
 }
 
 void AIBehaviors::SetWaypoints(std::vector<XMFLOAT3> pts)
@@ -25,6 +25,6 @@ void AIBehaviors::WaypointsLerp(std::vector<XMFLOAT3> pts, float t) {
 	for (int i = 0; i < size - 1; i++) {
 		// XMMATRIX trans = XMMatrixTranslation(agent->GetPosition().x + 1, agent->GetPosition().y, agent->GetPosition.z);
 		// float tX = agent->GetPosition().x + 1;
-		agent->SetPosition(-1.5f + 0.3 * t, 0, 5);
+		agent->SetPositionF(-1.5f + 0.3 * t, 0, 5);
 	}
 }

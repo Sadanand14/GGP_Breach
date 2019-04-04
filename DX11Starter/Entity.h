@@ -1,33 +1,56 @@
-#pragma once
+#ifndef ENTITY_H_
+#define ENTITY_H_
+
+#include "Object.h"
+#include "SceneRef.h"
+
 #include "Mesh.h"
 #include "Material.h"
 
-class Entity
+#include <vector>
+#include <string>
+
+class Scene;
+class Component;
+
+class Entity : public Object
 {
+private:
+	std::vector<std::string> tags;
+	SceneRef scene;
+
+	// Actually handles internal entity deletion, called by managing scene
+	void DestroyInternal();
+
+	friend class Scene;
+
 public:
-	Entity(char* fileName, ID3D11Device* device ,Material* mat);
-	~Entity();
 	Mesh * meshObject = nullptr;
 	Material * material = nullptr;
 
-	// Setters
-	void SetPosition(float x, float y, float z);
-	void SetScale(float x, float y, float z);
-	void SetRotation(float x, float y, float z);
-	void SetWorldMatrix(DirectX::XMFLOAT4X4 WM);
-	DirectX::XMFLOAT4X4 CalculateWorldMatrix(Entity* object);
+	Entity();
+	Entity(Scene* parentScene, u64 ind, u64 sID, u64 tID, Mesh* mesh, Material* mat, const Transform& t = Transform(), Entity* parentEntity = nullptr);
+	~Entity();
+
+	inline void SetPositionF(float x, float y, float z) { SetPositionWorld(glm::vec3(x, y, z)); }
+	inline void SetScaleF(float x, float y, float z) { SetScale(glm::vec3(x, y, z)); }
+	inline void SetRotationF(float x, float y, float z) { SetRotationWorld(glm::quat(glm::vec3(x, y, z))); }
 	void PrepareShader(DirectX::XMFLOAT4X4 viewMatrix, DirectX::XMFLOAT4X4 projMatrix);
 
-	// Getters
-	DirectX::XMFLOAT4X4 GetWorldMatrix();
-	DirectX::XMFLOAT3 GetPosition ();
-	DirectX::XMFLOAT3 GetScale();
-	DirectX::XMVECTOR GetRotation();
+	// Flags the entity for deletion
+	void Destroy();
 
-private:
-	DirectX::XMFLOAT4X4 worldMatrix;
-	DirectX::XMFLOAT3 position;
-	DirectX::XMFLOAT3 scale;
-	DirectX::XMVECTOR rotQuat;
+	// <TAGS>
+
+	inline std::vector<std::string> GetTags() const { return tags; }
+	inline bool HasTag(std::string tag) const { for (u64 i = 0; i < tags.size(); ++i) { if (tags[i] == tag) { return true; } } return false; }
+
+	// Will probably move tag system purely into script-side once that's up-and-running
+	void AddTag(std::string tag);
+	void RemoveTag(std::string tag);
+	void AddTags(std::vector<std::string> newTags);
+
+	// </TAGS>
 };
 
+#endif
