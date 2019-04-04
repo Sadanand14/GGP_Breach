@@ -1,7 +1,5 @@
 #include "Game.h"
 
-#include "Scene.h"
-
 // For the DirectX Math library
 using namespace DirectX;
 

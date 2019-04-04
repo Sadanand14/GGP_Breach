@@ -1,5 +1,4 @@
 #pragma once
-
 #include "DXCore.h"
 #include "SimpleShader.h"
 #include "Mesh.h"
@@ -7,6 +6,8 @@
 #include "Camera.h"
 #include "Lights.h"
 #include "AIBehaviors.h"
+#include "Scene.h"
+#include "AudioManager.h"
 #include <vector>
 
 class Game 
