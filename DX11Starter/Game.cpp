@@ -16,6 +16,9 @@ Game::Game(HINSTANCE hInstance)
 	// Initialize fields
 	vertexShader = 0;
 	pixelShader = 0;
+	skyPS = 0;
+	skyVS = 0;
+	shadowVS = 0;
 
 #if defined(DEBUG) || defined(_DEBUG)
 	// Do we want a console window?  Probably only in debug mode
@@ -33,6 +36,7 @@ Game::~Game()
 	delete pixelShader;
 	delete skyVS;
 	delete skyPS;
+	delete shadowVS;
 
 	// Deleting entities
 	for (int i = 0; i < meshes.size(); i++) {
@@ -64,6 +68,15 @@ Game::~Game()
 	depthState->Release();
 	skyDepthState->Release();
 	skyRasterState->Release();
+
+	// Deleting AI
+	delete wayPtsAI;
+
+	//Deleting Shadows
+	shadowDSV->Release();
+	shadowSRV->Release();
+	shadowSamplerState->Release();
+	shadowRasterizer->Release();
 }
 
 // --------------------------------------------------------
@@ -101,59 +114,71 @@ void Game::LoadShaders()
 
 	skyPS = new SimplePixelShader(device, context);
 	skyPS->LoadShaderFile(L"SkyPS.cso");
+
+	shadowVS = new SimpleVertexShader(device, context);
+	shadowVS->LoadShaderFile(L"ShadowVS.cso");
 }
 
 void Game::InitVectors()
 {
 	/// Textures
 	skyBoxTexture = new Texture();
-	testText1 = new Texture();
-	testText2 = new Texture();
-	testText3 = new Texture();
-	testText4 = new Texture();
+	battleship_Texture = new Texture();
+	lightningTower_Texture = new Texture();
+	airTower_Texture = new Texture();
+	waterTower_Texture = new Texture();
+	fireTower_Texture = new Texture();
 
 	textures.push_back(skyBoxTexture);
-	textures.push_back(testText1);
-	textures.push_back(testText2);
-	textures.push_back(testText3);
-	textures.push_back(testText4);
+	textures.push_back(battleship_Texture);
+	textures.push_back(lightningTower_Texture);
+	textures.push_back(airTower_Texture);
+	textures.push_back(waterTower_Texture);
+	textures.push_back(fireTower_Texture);
 	///
 
 	/// Normal Maps
-	testNorm1 = new Texture();
-	testNorm2 = new Texture();
-	testNorm3 = new Texture();
-	testNorm4 = new Texture();
+	battleship_Normal = new Texture();
+	lightningTower_Normal = new Texture();
+	airTower_Normal = new Texture();
+	waterTower_Normal = new Texture();
+	fireTower_Normal = new Texture();
 
-	normalMaps.push_back(testNorm1);
-	normalMaps.push_back(testNorm2);
-	normalMaps.push_back(testNorm3);
-	normalMaps.push_back(testNorm4);
+	normalMaps.push_back(battleship_Normal);
+	normalMaps.push_back(lightningTower_Normal);
+	normalMaps.push_back(airTower_Normal);
+	normalMaps.push_back(waterTower_Normal);
+	normalMaps.push_back(fireTower_Normal);
+
 	///
 
 	/// Materials
 	skyBoxMaterial = new Material();
-	testMat1 = new Material();
-	testMat2 = new Material();
-	testMat3 = new Material();
-	testMat4 = new Material();
+	battleship_Material = new Material();
+	lightningTower_Material = new Material();
+	airTower_Material = new Material();
+	waterTower_Material = new Material();
+	fireTower_Material = new Material();
 
 	materials.push_back(skyBoxMaterial);
-	materials.push_back(testMat1);
-	materials.push_back(testMat2);
-	materials.push_back(testMat3);
-	materials.push_back(testMat4);
+	materials.push_back(battleship_Material);
+	materials.push_back(lightningTower_Material);
+	materials.push_back(airTower_Material);
+	materials.push_back(waterTower_Material);
+	materials.push_back(fireTower_Material);
 	///
 
-	textureResources.push_back(srTest1);
-	textureResources.push_back(srTest2);
-	textureResources.push_back(srTest3);
-	textureResources.push_back(srTest4);
+	textureResources.push_back(battleshipSR);
+	textureResources.push_back(lightningTowerSR);
+	textureResources.push_back(airTowerSR);
+	textureResources.push_back(waterTowerSR);
+	textureResources.push_back(fireTowerSR);
 
-	normalResources.push_back(srTestNormal1);
-	normalResources.push_back(srTestNormal2);
-	normalResources.push_back(srTestNormal3);
-	normalResources.push_back(srTestNormal4);
+	normalResources.push_back(battleship_NormalSR);
+	normalResources.push_back(lightningTower_NormalSR);
+	normalResources.push_back(airTower_NormalSR);
+	normalResources.push_back(waterTower_NormalSR);
+	normalResources.push_back(fireTower_NormalSR);
 }
 
 void Game::CreateBasicGeometry()
@@ -161,40 +186,48 @@ void Game::CreateBasicGeometry()
 	cam = new Camera();
 	cam->UpdateProjectionMatrix((float)width / height);
 
-	// Making entities with materials and putting them in the vector
-	// skyBox = new Entity("Assets/Models/cube.obj", device, skyBoxMaterial);
-	// obj1 = new Entity("Assets/Models/sphere.obj", device, testMat1);
-	// obj2 = new Entity("Assets/Models/sphere.obj", device, testMat2);
-	// obj3 = new Entity("Assets/Models/sphere.obj", device, testMat3);
-	// obj4 = new Entity("Assets/Models/sphere.obj", device, testMat4);
+	scene = new Scene();
+
+	meshes.reserve(10000);
 
 	meshes.push_back(new Mesh("Assets/Models/cube.obj", device));
 	meshes.push_back(new Mesh("Assets/Models/sphere.obj", device));
 
-	scene = new Scene();
+	meshes.push_back(new Mesh("Assets/Models/cube.obj", device));
+	meshes.push_back(new Mesh("Assets/Models/Battleship_TB.obj", device));
+	meshes.push_back(new Mesh("Assets/Models/LightningTower.obj", device));
+	meshes.push_back(new Mesh("Assets/Models/AirTower.obj", device));
+	meshes.push_back(new Mesh("Assets/Models/WaterTower.obj", device));
+	meshes.push_back(new Mesh("Assets/Models/FireTower.obj", device));
 
-	skyBox = scene->SpawnEntity(meshes[0], skyBoxMaterial);
-	obj1 = scene->SpawnEntity(meshes[1], testMat1);
-	obj2 = scene->SpawnEntity(meshes[1], testMat2);
-	obj3 = scene->SpawnEntity(meshes[1], testMat3);
-	obj4 = scene->SpawnEntity(meshes[1], testMat4);
+	skyBox         = scene->SpawnEntity(meshes[0], skyBoxMaterial);
+	battleship     = scene->SpawnEntity(meshes[3], battleship_Material);
+	lightningTower = scene->SpawnEntity(meshes[4], lightningTower_Material);
+	airTower       = scene->SpawnEntity(meshes[5], airTower_Material);
+	waterTower     = scene->SpawnEntity(meshes[6], waterTower_Material);
+	fireTower      = scene->SpawnEntity(meshes[7], fireTower_Material);
 
 	entities.push_back(skyBox);
-	entities.push_back(obj1);
-	entities.push_back(obj2);
-	entities.push_back(obj3);
-	entities.push_back(obj4);
+	entities.push_back(battleship);
+	entities.push_back(lightningTower);
+	entities.push_back(airTower);
+	entities.push_back(waterTower);
+	entities.push_back(fireTower);
 
-	entities.push_back(scene->SpawnEntity(meshes[0], testMat3, nullptr, Transform(glm::vec3(0.0f, -2.5f, 0.0f))));
+	
+	entities.push_back(scene->SpawnEntity(meshes[0], waterTower_Material, nullptr, Transform(glm::vec3(0.0f, -2.5f, 0.0f))));
 
 	for (u64 i = 0; i < 9; ++i)
 	{
 		for (u64 j = 0; j < 9; ++j)
 		{
-			entities.push_back(scene->SpawnEntity(meshes[0], testMat4, nullptr, Transform(glm::vec3(-20.0f + 5.0f * i, -5.0f, -20.0f + 5.0f * j), glm::identity<quat>(), glm::vec3(3.0f))));
+			entities.push_back(scene->SpawnEntity(meshes[0], waterTower_Material, nullptr, Transform(glm::vec3(-60.0f + 15.0f * i, -2.0f, -60.0f + 15.0f * j), glm::identity<quat>(), glm::vec3(10.0f))));
 		}
 	}
+	
 	///
+
+	wayPtsAI = new AIBehaviors(entities[1]);
 }
 
 void Game::GenerateLights()
@@ -245,24 +278,27 @@ void Game::GenerateMaterials()
 	skyBoxMaterial->CreateMaterial(skyVS, skyPS, skyBoxTexture->GetShaderResourceView(), skyBoxTexture->GetSamplerState());
 
 	/// Textures
-	testText1->CreateTexure(device, context, L"Assets/Textures/testTextures/Colored.jpg", &srTest1);
-	testText2->CreateTexure(device, context, L"Assets/Textures/testTextures/Rock.jpg", &srTest2);
-	testText3->CreateTexure(device, context, L"Assets/Textures/testTextures/Marble.jpg", &srTest3);
-	testText4->CreateTexure(device, context, L"Assets/Textures/testTextures/Wood.jpg", &srTest4);
+	battleship_Texture ->CreateTexure(device, context, L"Assets/Textures/BattleShip_Texture.png", &battleshipSR);
+	lightningTower_Texture->CreateTexure(device, context, L"Assets/Textures/LightningTower_Texture.png", &lightningTowerSR);
+	airTower_Texture->CreateTexure(device, context, L"Assets/Textures/AirTower_Texture.png", &airTowerSR);
+	waterTower_Texture->CreateTexure(device, context, L"Assets/Textures/WaterTower_Texture.png", &waterTowerSR);
+	fireTower_Texture->CreateTexure(device, context, L"Assets/Textures/FireTower_Texture.png", &fireTowerSR);
 	///
 
 	/// Normals
-	testNorm1->CreateTexure(device, context, L"Assets/Textures/testTextures/Colored_Normal.jpg", &srTestNormal1);
-	testNorm2->CreateTexure(device, context, L"Assets/Textures/testTextures/Rock_Normal.jpg", &srTestNormal2);
-	testNorm3->CreateTexure(device, context, L"Assets/Textures/testTextures/Marble_Normal.jpg", &srTestNormal3);
-	testNorm4->CreateTexure(device, context, L"Assets/Textures/testTextures/Wood_Normal.jpg", &srTestNormal4);
+	battleship_Normal->CreateTexure(device, context, L"Assets/Textures/testTextures/Colored_Normal.jpg", &battleship_NormalSR);
+	lightningTower_Normal->CreateTexure(device, context, L"Assets/Textures/testTextures/Rock_Normal.jpg", &lightningTower_NormalSR);
+	airTower_Normal->CreateTexure(device, context, L"Assets/Textures/testTextures/Marble_Normal.jpg", &airTower_NormalSR);
+	waterTower_Normal->CreateTexure(device, context, L"Assets/Textures/testTextures/Wood_Normal.jpg", &waterTower_NormalSR);
+	fireTower_Normal->CreateTexure(device, context, L"Assets/Textures/testTextures/Wood_Normal.jpg", &fireTower_NormalSR);
 	///
 
 	// passing pixel and vertex to materials
-	testMat1->CreateNormalMaterial(vertexShader, pixelShader, testText1->GetShaderResourceView(), testNorm1->GetShaderResourceView(), testText1->GetSamplerState());
-	testMat2->CreateNormalMaterial(vertexShader, pixelShader, testText2->GetShaderResourceView(), testNorm2->GetShaderResourceView(), testText2->GetSamplerState());
-	testMat3->CreateNormalMaterial(vertexShader, pixelShader, testText3->GetShaderResourceView(), testNorm3->GetShaderResourceView(), testText3->GetSamplerState());
-	testMat4->CreateNormalMaterial(vertexShader, pixelShader, testText4->GetShaderResourceView(), testNorm4->GetShaderResourceView(), testText4->GetSamplerState());
+	battleship_Material->CreateMaterial(vertexShader, pixelShader, battleship_Texture->GetShaderResourceView(), battleship_Texture->GetSamplerState());
+	lightningTower_Material->CreateMaterial(vertexShader, pixelShader, lightningTower_Texture->GetShaderResourceView(), lightningTower_Texture->GetSamplerState());
+	airTower_Material->CreateMaterial(vertexShader, pixelShader, airTower_Texture->GetShaderResourceView(), airTower_Texture->GetSamplerState());
+	waterTower_Material->CreateMaterial(vertexShader, pixelShader, waterTower_Texture->GetShaderResourceView(), waterTower_Texture->GetSamplerState());
+	fireTower_Material->CreateMaterial(vertexShader, pixelShader, fireTower_Texture->GetShaderResourceView(), fireTower_Texture->GetSamplerState());
 }
 
 void Game::InitStates()
@@ -308,6 +344,66 @@ void Game::InitStates()
 
 	// Set the state! (For last param, set all the bits!)
 	context->OMSetBlendState(blendState, 0, 0xFFFFFFFF);
+
+	//Shadowmap init
+
+	nShadowMapSize = 2048;
+
+	D3D11_TEXTURE2D_DESC shadowDesc = {};
+	shadowDesc.Width = nShadowMapSize;
+	shadowDesc.Height = nShadowMapSize;
+	shadowDesc.ArraySize = 1;
+	shadowDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
+	shadowDesc.CPUAccessFlags = 0;
+	shadowDesc.Format = DXGI_FORMAT_R32_TYPELESS;
+	shadowDesc.MipLevels = 1;
+	shadowDesc.MiscFlags = 0;
+	shadowDesc.SampleDesc.Count = 1;
+	shadowDesc.SampleDesc.Quality = 0;
+	shadowDesc.Usage = D3D11_USAGE_DEFAULT;
+	ID3D11Texture2D* shadowTexture;
+	device->CreateTexture2D(&shadowDesc, 0, &shadowTexture);
+
+	// Create the depth/stencil
+	D3D11_DEPTH_STENCIL_VIEW_DESC shadowDSDesc = {};
+	shadowDSDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	shadowDSDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	shadowDSDesc.Texture2D.MipSlice = 0;
+	device->CreateDepthStencilView(shadowTexture, &shadowDSDesc, &shadowDSV);
+
+	// Create the SRV for the shadow map
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+	srvDesc.Format = DXGI_FORMAT_R32_FLOAT;
+	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MipLevels = 1;
+	srvDesc.Texture2D.MostDetailedMip = 0;
+	device->CreateShaderResourceView(shadowTexture, &srvDesc, &shadowSRV);
+
+	// Release the texture reference since we don't need it
+	shadowTexture->Release();
+
+	// Create the special "comparison" sampler state for shadows
+	D3D11_SAMPLER_DESC shadowSampDesc = {};
+	shadowSampDesc.Filter = D3D11_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR; // Could be anisotropic
+	shadowSampDesc.ComparisonFunc = D3D11_COMPARISON_LESS;
+	shadowSampDesc.AddressU = D3D11_TEXTURE_ADDRESS_BORDER;
+	shadowSampDesc.AddressV = D3D11_TEXTURE_ADDRESS_BORDER;
+	shadowSampDesc.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
+	shadowSampDesc.BorderColor[0] = 1.0f;
+	shadowSampDesc.BorderColor[1] = 1.0f;
+	shadowSampDesc.BorderColor[2] = 1.0f;
+	shadowSampDesc.BorderColor[3] = 1.0f;
+	device->CreateSamplerState(&shadowSampDesc, &shadowSamplerState);
+
+	// Create a rasterizer state
+	D3D11_RASTERIZER_DESC shadowRastDesc = {};
+	shadowRastDesc.FillMode = D3D11_FILL_SOLID;
+	shadowRastDesc.CullMode = D3D11_CULL_BACK;
+	shadowRastDesc.DepthClipEnable = true;
+	shadowRastDesc.DepthBias = 1000; // Multiplied by (smallest possible value > 0 in depth buffer)
+	shadowRastDesc.DepthBiasClamp = 0.0f;
+	shadowRastDesc.SlopeScaledDepthBias = 1.0f;
+	device->CreateRasterizerState(&shadowRastDesc, &shadowRasterizer);
 }
 
 
@@ -347,6 +443,8 @@ void Game::Update(float deltaTime, float totalTime)
 	entities[1]->SetPositionF(0, 0, 5);
 	entities[1]->SetScaleF(3,3,3);
 	entities[1]->SetRotationF(0,0,0);
+
+	wayPtsAI->WaypointsLerp({ XMFLOAT3(0,0,1), XMFLOAT3(0,0,1) , XMFLOAT3(0,0,1) , XMFLOAT3(0,0,1) , XMFLOAT3(0,0,1) }, totalTime);
 	///
 
 	// entities[1]->SetWorldMatrix(entities[1]->CalculateWorldMatrix(entities[1]));
@@ -381,6 +479,8 @@ void Game::Update(float deltaTime, float totalTime)
 // --------------------------------------------------------
 void Game::Draw(float deltaTime, float totalTime)
 {
+	RenderShadowMap();
+
 	// Background color (Cornflower Blue in this case) for clearing
 	const float color[4] = { 0.4f, 0.6f, 0.75f, 0.0f };
 
@@ -472,6 +572,66 @@ void Game::DrawSky()
 	// Reset your states
 	context->RSSetState(0);
 	context->OMSetDepthStencilState(0, 0);
+}
+
+void Game::RenderShadowMap()
+{
+	// Initial setup of targets and states
+	context->OMSetRenderTargets(0, 0, shadowDSV);
+	context->ClearDepthStencilView(shadowDSV, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	context->RSSetState(shadowRasterizer);
+
+
+	D3D11_VIEWPORT shadowViewport = {};
+	shadowViewport.TopLeftX = 0;
+	shadowViewport.TopLeftY = 0;
+	shadowViewport.Width = (float)nShadowMapSize;
+	shadowViewport.Height = (float)nShadowMapSize;
+	shadowViewport.MinDepth = 0.0f;
+	shadowViewport.MaxDepth = 1.0f;
+	context->RSSetViewports(1, &shadowViewport);
+
+
+	shadowVS->SetShader();
+	shadowVS->SetMatrix4x4("view", dirLightView);
+	shadowVS->SetMatrix4x4("projection", dirLightProjection);
+
+
+	context->PSSetShader(0, 0, 0); // Unbinds the pixel shader
+
+
+	UINT stride = sizeof(Vertex);
+	UINT offset = 0;
+
+	for (UINT i = 0; i < entities.size(); i++)
+	{
+
+		Entity* currentEntity = entities[i];
+		ID3D11Buffer* vb = currentEntity->meshObject->GetVertexBuffer();
+		ID3D11Buffer* ib = currentEntity->meshObject->GetIndexBuffer();
+
+		// printf("%d    %d", vb, ib);
+
+
+		context->IASetVertexBuffers(0, 1, &vb, &stride, &offset);
+		context->IASetIndexBuffer(ib, DXGI_FORMAT_R32_UINT, 0);
+
+		mat4 worldMat = glm::transpose(entities[i]->GetWorldMatrix());
+		float* matarr = &(worldMat[0][0]);
+
+		shadowVS->SetMatrix4x4("world", matarr);
+		shadowVS->CopyAllBufferData();
+
+
+		context->DrawIndexed(currentEntity->meshObject->GetIndexCount(), 0, 0);
+	}
+
+	context->OMSetRenderTargets(1, &backBufferRTV, depthStencilView);
+	context->RSSetState(0);
+	shadowViewport.Width = (float)this->width;
+	shadowViewport.Height = (float)this->height;
+	context->RSSetViewports(1, &shadowViewport);
+
 }
 
 

@@ -1,2 +1,4 @@
-﻿  Game.cpp
-  DX11Starter.vcxproj -> Z:\IGMProfile\Documents\GitHub\GGP_Breach\x64\Debug\DX11Starter.exe
+﻿  AIBehaviors.cpp
+z:\igmprofile\desktop\ggp_breach\dx11starter\aibehaviors.cpp(23): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+z:\igmprofile\desktop\ggp_breach\dx11starter\aibehaviors.cpp(28): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  DX11Starter.vcxproj -> Z:\IGMProfile\Desktop\GGP_Breach\x64\Debug\DX11Starter.exe
