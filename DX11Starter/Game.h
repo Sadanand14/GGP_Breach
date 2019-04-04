@@ -7,6 +7,7 @@
 #include "Camera.h"
 #include "Lights.h"
 #include "AIBehaviors.h"
+#include <vector>
 
 class Game 
 	: public DXCore
@@ -26,14 +27,14 @@ public:
 	void RenderShadowMap();
 
 	// Overridden mouse input helper methods
-	void OnMouseDown (WPARAM buttonState, int x, int y);
-	void OnMouseUp	 (WPARAM buttonState, int x, int y);
-	void OnMouseMove (WPARAM buttonState, int x, int y);
+	void OnMouseDown(WPARAM buttonState, int x, int y);
+	void OnMouseUp(WPARAM buttonState, int x, int y);
+	void OnMouseMove(WPARAM buttonState, int x, int y);
 	void OnMouseWheel(float wheelDelta,   int x, int y);
 private:
 
 	// Initialization helper methods - feel free to customize, combine, etc.
-	void LoadShaders(); 
+	void LoadShaders();
 	void CreateBasicGeometry();
 	void GenerateLights();
 	void GenerateMaterials();
@@ -132,6 +133,7 @@ private:
 
 	// AI
 	AIBehaviors* wayPtsAI = nullptr;
+	float t;
 
 	//Shadowmap Resources
 	int nShadowMapSize;

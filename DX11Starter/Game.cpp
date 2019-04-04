@@ -19,6 +19,7 @@ Game::Game(HINSTANCE hInstance)
 	skyPS = 0;
 	skyVS = 0;
 	shadowVS = 0;
+	t = 0;
 
 #if defined(DEBUG) || defined(_DEBUG)
 	// Do we want a console window?  Probably only in debug mode
@@ -185,15 +186,12 @@ void Game::CreateBasicGeometry()
 {
 	cam = new Camera();
 	cam->UpdateProjectionMatrix((float)width / height);
-
 	scene = new Scene();
 
 	meshes.reserve(10000);
 
 	meshes.push_back(new Mesh("Assets/Models/cube.obj", device));
 	meshes.push_back(new Mesh("Assets/Models/sphere.obj", device));
-
-	meshes.push_back(new Mesh("Assets/Models/cube.obj", device));
 	meshes.push_back(new Mesh("Assets/Models/Battleship_TB.obj", device));
 	meshes.push_back(new Mesh("Assets/Models/LightningTower.obj", device));
 	meshes.push_back(new Mesh("Assets/Models/AirTower.obj", device));
@@ -201,11 +199,11 @@ void Game::CreateBasicGeometry()
 	meshes.push_back(new Mesh("Assets/Models/FireTower.obj", device));
 
 	skyBox         = scene->SpawnEntity(meshes[0], skyBoxMaterial);
-	battleship     = scene->SpawnEntity(meshes[3], battleship_Material);
-	lightningTower = scene->SpawnEntity(meshes[4], lightningTower_Material);
-	airTower       = scene->SpawnEntity(meshes[5], airTower_Material);
-	waterTower     = scene->SpawnEntity(meshes[6], waterTower_Material);
-	fireTower      = scene->SpawnEntity(meshes[7], fireTower_Material);
+	battleship     = scene->SpawnEntity(meshes[2], battleship_Material);
+	lightningTower = scene->SpawnEntity(meshes[3], lightningTower_Material);
+	airTower       = scene->SpawnEntity(meshes[4], airTower_Material);
+	waterTower     = scene->SpawnEntity(meshes[5], waterTower_Material);
+	fireTower      = scene->SpawnEntity(meshes[6], fireTower_Material);
 
 	entities.push_back(skyBox);
 	entities.push_back(battleship);
@@ -213,20 +211,7 @@ void Game::CreateBasicGeometry()
 	entities.push_back(airTower);
 	entities.push_back(waterTower);
 	entities.push_back(fireTower);
-
-	
-	entities.push_back(scene->SpawnEntity(meshes[0], waterTower_Material, nullptr, Transform(glm::vec3(0.0f, -2.5f, 0.0f))));
-
-	for (u64 i = 0; i < 9; ++i)
-	{
-		for (u64 j = 0; j < 9; ++j)
-		{
-			entities.push_back(scene->SpawnEntity(meshes[0], waterTower_Material, nullptr, Transform(glm::vec3(-60.0f + 15.0f * i, -2.0f, -60.0f + 15.0f * j), glm::identity<quat>(), glm::vec3(10.0f))));
-		}
-	}
-	
 	///
-
 	wayPtsAI = new AIBehaviors(entities[1]);
 }
 
@@ -346,7 +331,6 @@ void Game::InitStates()
 	context->OMSetBlendState(blendState, 0, 0xFFFFFFFF);
 
 	//Shadowmap init
-
 	nShadowMapSize = 2048;
 
 	D3D11_TEXTURE2D_DESC shadowDesc = {};
@@ -437,17 +421,11 @@ void Game::Update(float deltaTime, float totalTime)
 	entities[0]->SetRotationF(0, 0, 0);
 	///
 
-	// entities[0]->SetWorldMatrix(entities[0]->CalculateWorldMatrix(entities[0]));
-
 	/// Moving Entity 1
 	entities[1]->SetPositionF(0, 0, 5);
 	entities[1]->SetScaleF(3,3,3);
 	entities[1]->SetRotationF(0,0,0);
-
-	wayPtsAI->WaypointsLerp({ XMFLOAT3(0,0,1), XMFLOAT3(0,0,1) , XMFLOAT3(0,0,1) , XMFLOAT3(0,0,1) , XMFLOAT3(0,0,1) }, totalTime);
 	///
-
-	// entities[1]->SetWorldMatrix(entities[1]->CalculateWorldMatrix(entities[1]));
 
 	/// Moving Entity 2
 	entities[2]->SetPositionF(-4 , 0, 5);
@@ -455,23 +433,22 @@ void Game::Update(float deltaTime, float totalTime)
 	entities[2]->SetRotationF(0, 0, 0);
 	///
 
-	// entities[2]->SetWorldMatrix(entities[2]->CalculateWorldMatrix(entities[2]));
-
 	/// Moving Entity 3
 	entities[3]->SetPositionF(-8, 0, 5);
 	entities[3]->SetScaleF(3, 3, 3);
 	entities[3]->SetRotationF(0, 0, 0);
-
-	// entities[3]->SetWorldMatrix(entities[3]->CalculateWorldMatrix(entities[3]));
 	///
 
 	/// Moving Entity 4
 	entities[4]->SetPositionF(4, 0, 5);
 	entities[4]->SetScaleF(3, 3, 3);
 	entities[4]->SetRotationF(0, 0, 0);
-
-	// entities[4]->SetWorldMatrix(entities[4]->CalculateWorldMatrix(entities[4]));
 	///
+
+	switch (wayPtsAI->lerpPeriods) {
+		//case 0: wayPtsAI->WaypointsLerp(entities[2]->GetWorldPosition(), entities[4]->GetWorldPosition()); break;
+		//case 1: wayPtsAI->WaypointsLerp(entities[4]->GetWorldPosition(), entities[3]->GetWorldPosition()); break;
+	}
 }
 
 // --------------------------------------------------------

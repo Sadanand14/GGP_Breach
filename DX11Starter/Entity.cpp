@@ -80,6 +80,19 @@ Entity::~Entity()
 	// delete meshObject;
 }
 
+inline void Entity::GetPosition()
+{
+
+}
+
+inline void Entity::GetScale()
+{
+}
+
+inline void Entity::GetRotation()
+{
+}
+
 void Entity::PrepareShader(DirectX::XMFLOAT4X4 viewMatrix, DirectX::XMFLOAT4X4 projMatrix)
 {
 	material->GetVertexShader()->SetMatrix4x4("view", viewMatrix);

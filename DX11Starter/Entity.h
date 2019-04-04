@@ -35,6 +35,9 @@ public:
 	inline void SetPositionF(float x, float y, float z) { SetPositionWorld(glm::vec3(x, y, z)); }
 	inline void SetScaleF(float x, float y, float z) { SetScale(glm::vec3(x, y, z)); }
 	inline void SetRotationF(float x, float y, float z) { SetRotationWorld(glm::quat(glm::vec3(x, y, z))); }
+	inline void GetPosition();
+	inline void GetScale();
+	inline void GetRotation();
 	void PrepareShader(DirectX::XMFLOAT4X4 viewMatrix, DirectX::XMFLOAT4X4 projMatrix);
 
 	// Flags the entity for deletion
